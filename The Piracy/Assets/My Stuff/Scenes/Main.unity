@@ -446,9 +446,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3baceab5e8540fa4a89b4cac8f09b4d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CurvePower: 1.1
+  CurvePower: 1.02
   CurvePowerRef: _Curve_Power
-  CurveOffset: 5
+  CurveOffset: 50
   CurveOffsetRef: _Curve_Offset
   center: {fileID: 227400556}
   CurveCenterRef: _Curve_Center
@@ -556,7 +556,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6150150c2d1aac4da7b69243f17d966, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxViewDst: 301
+  maxViewDst: 201
   viewer: {fileID: 227400556}
 --- !u!1 &2118282430
 GameObject:

@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+using System.Threading;
 
 [System.Serializable]
 public class TerrainType {
@@ -10,7 +12,6 @@ public class TerrainType {
 
 public class MapGenerater : MonoBehaviour
 {
-	public GameObject meshObject;
 	public Material terrainMaterial;
 	public int size = 10;
     public float meshHeightMultiplier;
@@ -20,22 +21,55 @@ public class MapGenerater : MonoBehaviour
 	public int octaves = 5;
 	public float persistance = 0.2f, lacunarity = 2;
 	public Vector2 offset = Vector2.zero;
-
 	public TerrainType[] regions;
+
+    Queue<MapData> meshQueue = new Queue<MapData>();
 
     public static MapGenerater Singleton;
 
-    private void Awake(){
+    private void Awake(){ 
         Singleton = this;
     }
+    public void GenorateMeshOnThread(Vector2 center, Action<MeshData> callback){
+        ThreadStart threadStart = delegate {
+            GeneratingMesh(center, callback);
+        };
 
-	private void Start()
-	{
-		MeshFilter meshFilter = meshObject.AddComponent<MeshFilter>();
-		meshFilter.sharedMesh = MeshGenerater.GenerateTerrainMesh(GenerateMap(size, seed, scale, octaves, persistance, lacunarity, offset), regions, meshHeightMultiplier, meshHeightCurve).CreateMesh();
-		MeshRenderer meshRenderer = meshObject.AddComponent<MeshRenderer>();
-		meshRenderer.sharedMaterial = terrainMaterial;
-	}
+        new Thread(threadStart).Start();
+    }
+
+    private void GeneratingMesh(Vector2 center, Action<MeshData> callback) {
+        MeshData meshData = MeshGenerater.GenerateTerrainMesh(GenerateMap(size, seed, scale, octaves, persistance, lacunarity, center + offset), regions, meshHeightMultiplier, meshHeightCurve);
+            
+        lock (meshQueue)
+        {
+            meshQueue.Enqueue(new MapData(callback, meshData));
+        }
+    }
+
+
+    void Update() {
+        if (meshQueue.Count > 0)
+        {
+            for (var i = 0; i < meshQueue.Count; i++)
+            {
+                MapData mapData = meshQueue.Dequeue();
+                Mesh mesh = mapData.meshData.CreateMesh();
+                mapData.callback(mapData.meshData);
+            }
+        }
+    }
+
+
+    struct MapData {
+        public Action<MeshData> callback;
+        public MeshData meshData;
+        public MapData(Action<MeshData> callback, MeshData meshData)
+        {
+            this.callback = callback;
+            this.meshData = meshData;
+        }
+    }
 
 	public static float[,] GenerateMap(int size, int seed, float scale, int octaves, float persistance, float lacunarity, Vector2 offset)
 	{

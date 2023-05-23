@@ -46,7 +46,6 @@ public class EndlessTerrain : MonoBehaviour {
 				} else {
 					terrainChunkDictionary.Add (viewedChunkCoord, new TerrainChunk (viewedChunkCoord, chunkSize, transform, maxViewDst));
 				}
-
 			}
 		}
 	}
@@ -54,6 +53,9 @@ public class EndlessTerrain : MonoBehaviour {
 	public class TerrainChunk {
 
 		GameObject meshObject;
+
+		MeshRenderer meshRenderer;
+		MeshFilter meshFilter;
 		Vector2 position;
 		Bounds bounds;
 
@@ -62,14 +64,23 @@ public class EndlessTerrain : MonoBehaviour {
 
             viewDst = maxViewDst;
 			position = coord * size;
-			bounds = new Bounds(position,Vector2.one * size);
+			bounds = new Bounds(position, Vector3.one * size);
 			Vector3 positionV3 = new Vector3(position.x,0,position.y);
 
-			meshObject = GameObject.CreatePrimitive(PrimitiveType.Plane);
+			meshObject = new GameObject("Terrain Chunk");
+			meshFilter = meshObject.AddComponent<MeshFilter>();
+			meshRenderer = meshObject.AddComponent<MeshRenderer>();
+			meshRenderer.material = MapGenerater.Singleton.terrainMaterial;
+
 			meshObject.transform.position = positionV3;
-			meshObject.transform.localScale = Vector3.one * size /10f;
 			meshObject.transform.parent = parent;
 			SetVisible(false);
+
+			MapGenerater.Singleton.GenorateMeshOnThread(position, OnMeshGenerated);
+		}
+
+		void OnMeshGenerated(MeshData meshData) {
+			meshFilter.mesh = meshData.CreateMesh();
 		}
 
 		public void UpdateTerrainChunk() {
