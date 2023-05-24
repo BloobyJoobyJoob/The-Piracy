@@ -216,17 +216,17 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 9b52c00d84623aa42977cb049600d7e6,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.447105
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9b52c00d84623aa42977cb049600d7e6,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9b52c00d84623aa42977cb049600d7e6,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -3.5105681
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9b52c00d84623aa42977cb049600d7e6,
         type: 3}
@@ -241,12 +241,12 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 9b52c00d84623aa42977cb049600d7e6,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9b52c00d84623aa42977cb049600d7e6,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9b52c00d84623aa42977cb049600d7e6,
         type: 3}
@@ -266,7 +266,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 9b52c00d84623aa42977cb049600d7e6,
         type: 3}
       propertyPath: m_ConstrainProportionsScale
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: 9b52c00d84623aa42977cb049600d7e6,
         type: 3}
@@ -277,6 +277,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Water
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 9b52c00d84623aa42977cb049600d7e6,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9b52c00d84623aa42977cb049600d7e6, type: 3}
@@ -357,8 +362,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 782762647}
-  m_LocalRotation: {x: -0.26169282, y: 0.5543327, z: -0.18918698, w: -0.7670988}
-  m_LocalPosition: {x: 18.539858, y: 11.705925, z: -0.037285805}
+  m_LocalRotation: {x: -0.14049742, y: -0.84299934, z: 0.25736973, w: -0.4509694}
+  m_LocalPosition: {x: -98.15535, y: 59.874992, z: 55.26662}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -495,7 +500,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   terrainMaterial: {fileID: 2100000, guid: 2a94cbb4872dbc54090ac3703eecb8e8, type: 2}
   size: 100
-  meshHeightMultiplier: 10
+  meshHeightMultiplier: 40
   meshHeightCurve:
     serializedVersion: 2
     m_Curve:
@@ -509,8 +514,8 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
-      time: 1
-      value: 1
+      time: 1.300958
+      value: 1.3091279
       inSlope: 2
       outSlope: 2
       tangentMode: 0
@@ -521,10 +526,10 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   seed: 0
-  scale: 25
-  octaves: 5
+  scale: 100
+  octaves: 7
   persistance: 0.5
-  lacunarity: 2
+  lacunarity: 1.9
   offset: {x: 0, y: 0}
   regions:
   - height: 0
