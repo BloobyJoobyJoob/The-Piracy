@@ -55,6 +55,7 @@ public class EndlessTerrain : MonoBehaviour {
 		GameObject meshObject;
 
 		MeshRenderer meshRenderer;
+		MeshCollider meshCollider;
 		MeshFilter meshFilter;
 		Vector2 position;
 		Bounds bounds;
@@ -70,6 +71,7 @@ public class EndlessTerrain : MonoBehaviour {
 			meshObject = new GameObject("Terrain Chunk");
 			meshFilter = meshObject.AddComponent<MeshFilter>();
 			meshRenderer = meshObject.AddComponent<MeshRenderer>();
+			meshCollider = meshObject.AddComponent<MeshCollider>();
 			meshRenderer.material = MapGenerater.Singleton.terrainMaterial;
 
 			meshObject.transform.position = positionV3;
@@ -81,6 +83,7 @@ public class EndlessTerrain : MonoBehaviour {
 
 		void OnMeshGenerated(MeshData meshData) {
 			meshFilter.mesh = meshData.CreateMesh();
+			meshCollider.sharedMesh = meshFilter.mesh;
 		}
 
 		public void UpdateTerrainChunk() {

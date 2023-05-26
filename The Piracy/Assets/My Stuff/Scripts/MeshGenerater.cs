@@ -14,9 +14,9 @@ public static class MeshGenerater
 
         float halfSize = size / 2f;
 
-        for (var y = 0; y < size; y++)
+        for (var y = 0; y < size - 1; y++)
         {
-            for (var x = 0; x < size; x++)
+            for (var x = 0; x < size - 1; x++)
             {
                 int a = vert;
                 int b = a + 1;
@@ -27,12 +27,12 @@ public static class MeshGenerater
                 int f = e + 1;
 
                 meshData.vertices[a] = new Vector3(x - halfSize, heightCurve.Evaluate(heightMap[x, y]) * heightMultiplier, y - halfSize);
-                meshData.vertices[b] = new Vector3(x + 1 - halfSize, heightCurve.Evaluate(heightMap[Mathf.Min(x + 1, size - 1), y]) * heightMultiplier, y - halfSize);
-                meshData.vertices[c] = new Vector3(x + 1 - halfSize, heightCurve.Evaluate(heightMap[Mathf.Min(x + 1, size - 1), Mathf.Min(y + 1, size - 1)]) * heightMultiplier, y + 1 - halfSize);
+                meshData.vertices[b] = new Vector3(x + 1 - halfSize, heightCurve.Evaluate(heightMap[x + 1, y]) * heightMultiplier, y - halfSize);
+                meshData.vertices[c] = new Vector3(x + 1 - halfSize, heightCurve.Evaluate(heightMap[(x + 1), y + 1]) * heightMultiplier, y + 1 - halfSize);
 
                 meshData.vertices[d] = new Vector3(x - halfSize, heightCurve.Evaluate(heightMap[x, y]) * heightMultiplier, y - halfSize);
-                meshData.vertices[e] = new Vector3(x - halfSize, heightCurve.Evaluate(heightMap[x, Mathf.Min(y + 1, size - 1)]) * heightMultiplier, y + 1 - halfSize);
-                meshData.vertices[f] = new Vector3(x + 1 - halfSize, heightCurve.Evaluate(heightMap[Mathf.Min(x + 1, size - 1), Mathf.Min(y + 1, size - 1)]) * heightMultiplier, y + 1 - halfSize);
+                meshData.vertices[e] = new Vector3(x - halfSize, heightCurve.Evaluate(heightMap[x, y + 1]) * heightMultiplier, y + 1 - halfSize);
+                meshData.vertices[f] = new Vector3(x + 1 - halfSize, heightCurve.Evaluate(heightMap[x + 1, y + 1]) * heightMultiplier, y + 1 - halfSize);
 
                 AddColoredTri(a, c, b);
                 AddColoredTri(d, e, f);

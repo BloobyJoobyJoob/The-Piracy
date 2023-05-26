@@ -39,7 +39,7 @@ public class MapGenerater : MonoBehaviour
     }
 
     private void GeneratingMesh(Vector2 center, Action<MeshData> callback) {
-        MeshData meshData = MeshGenerater.GenerateTerrainMesh(GenerateMap(size, seed, scale, octaves, persistance, lacunarity, center + offset), regions, meshHeightMultiplier, meshHeightCurve);
+        MeshData meshData = MeshGenerater.GenerateTerrainMesh(GenerateMap(size + 1, seed, scale, octaves, persistance, lacunarity, center + offset), regions, meshHeightMultiplier, meshHeightCurve);
             
         lock (meshQueue)
         {
@@ -77,11 +77,18 @@ public class MapGenerater : MonoBehaviour
 
     System.Random prng = new System.Random(seed);
     Vector2[] octaveOffsets = new Vector2[octaves];
+
+    float maxHeight = 0;
+    float amplitude = 1;
+
     for (int i = 0; i < octaves; i++)
     {
         float offsetX = prng.Next(-100000, 100000) + offset.x;
         float offsetY = prng.Next(-100000, 100000) + offset.y;
         octaveOffsets[i] = new Vector2(offsetX, offsetY);
+
+        maxHeight += amplitude;
+        amplitude *= persistance;
     }
 
     if (scale <= 0)
@@ -89,21 +96,21 @@ public class MapGenerater : MonoBehaviour
         scale = 0.0001f;
     }
 
-    float maxNoiseHeight = float.MinValue;
-    float minNoiseHeight = float.MaxValue;
+    float maxLocalNoiseHeight = float.MinValue;
+    float minLocalNoiseHeight = float.MaxValue;
 
     for (int y = 0; y < size; y++)
     {
         for (int x = 0; x < size; x++)
         {
-            float amplitude = 1;
+            amplitude = 1;
             float frequency = 1;
             float noiseHeight = 0;
 
             for (int i = 0; i < octaves; i++)
             {
-                float sampleX = (x - size / 2f) / scale * frequency + octaveOffsets[i].x;
-                float sampleY = (y - size / 2f) / scale * frequency + octaveOffsets[i].y;
+                float sampleX = (x - (size / 2f) + octaveOffsets[i].x) / scale * frequency;
+                float sampleY = (y - (size / 2f) + octaveOffsets[i].y) / scale * frequency;
 
                 float perlinValue = Mathf.PerlinNoise(sampleX, sampleY) * 2 - 1;
                 noiseHeight += perlinValue * amplitude;
@@ -112,13 +119,13 @@ public class MapGenerater : MonoBehaviour
                 frequency *= lacunarity;
             }
 
-            if (noiseHeight > maxNoiseHeight)
+            if (noiseHeight > maxLocalNoiseHeight)
             {
-                maxNoiseHeight = noiseHeight;
+                maxLocalNoiseHeight = noiseHeight;
             }
-            else if (noiseHeight < minNoiseHeight)
+            else if (noiseHeight < minLocalNoiseHeight)
             {
-                minNoiseHeight = noiseHeight;
+                minLocalNoiseHeight = noiseHeight;
             }
             noiseMap[x, y] = noiseHeight;
         }
@@ -128,7 +135,8 @@ public class MapGenerater : MonoBehaviour
     {
         for (int x = 0; x < size; x++)
         {
-            noiseMap[x, y] = Mathf.InverseLerp(minNoiseHeight, maxNoiseHeight, noiseMap[x, y]);
+            float normalizedHeight = (noiseMap[x, y] + 1) / (2 * maxHeight / 2.25f);
+            noiseMap [x, y] = normalizedHeight;
         }
     }
 
