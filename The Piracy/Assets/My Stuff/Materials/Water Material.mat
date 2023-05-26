@@ -68,7 +68,7 @@ Material:
     - _Transperancy_Min: 0
     - _Water_Bounce_Height: 2
     m_Colors:
-    - _Deep_Color: {r: 0.1350587, g: 0.35465184, b: 0.6431373, a: 1}
+    - _Deep_Color: {r: 0.26162094, g: 0.45388287, b: 0.709, a: 0.92156863}
     - _Foam_Color: {r: 1, g: 0.96013063, b: 0.8537736, a: 1}
-    - _Shallow_Color: {r: 0.13275275, g: 0.7346478, b: 0.8509804, a: 0}
+    - _Shallow_Color: {r: 0, g: 0.90975475, b: 1, a: 0.14117648}
   m_BuildTextureStacks: []

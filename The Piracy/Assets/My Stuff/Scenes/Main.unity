@@ -393,7 +393,7 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 0
+  m_RenderPostProcessing: 1
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0
@@ -453,6 +453,55 @@ MonoBehaviour:
   CurveOffsetRef: _Curve_Offset
   center: {fileID: 227400556}
   CurveCenterRef: _Curve_Center
+--- !u!1 &1149463197
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1149463199}
+  - component: {fileID: 1149463198}
+  m_Layer: 0
+  m_Name: Global Volume
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1149463198
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1149463197}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IsGlobal: 1
+  priority: 0
+  blendDistance: 0
+  weight: 1
+  sharedProfile: {fileID: 11400000, guid: a6560a915ef98420e9faacc1c7438823, type: 2}
+--- !u!4 &1149463199
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1149463197}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -239.69896, y: -160.89226, z: -21.708233}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2088564254
 GameObject:
   m_ObjectHideFlags: 0
@@ -507,20 +556,56 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 0.0048309173
-      inSlope: 0
-      outSlope: 0
+      inSlope: 0.46345058
+      outSlope: 0.46345058
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0
+      outWeight: 0.25
     - serializedVersion: 3
-      time: 1.300958
-      value: 1.3091279
+      time: 0.80779576
+      value: 0.54935837
+      inSlope: 0.08566641
+      outSlope: -0.1392075
+      tangentMode: 1
+      weightedMode: 3
+      inWeight: 0.054734737
+      outWeight: 0.0922755
+    - serializedVersion: 3
+      time: 0.9508843
+      value: 0.5810103
+      inSlope: 1.148696
+      outSlope: -0.004769533
+      tangentMode: 1
+      weightedMode: 3
+      inWeight: 0.14420524
+      outWeight: 1
+    - serializedVersion: 3
+      time: 0.9750095
+      value: 0.59760094
+      inSlope: 0.5407101
+      outSlope: 0.7791788
+      tangentMode: 1
+      weightedMode: 3
+      inWeight: 0.5276563
+      outWeight: 0.57193035
+    - serializedVersion: 3
+      time: 1.070065
+      value: 1.1447169
+      inSlope: 10.978683
+      outSlope: 4.444072
+      tangentMode: 1
+      weightedMode: 3
+      inWeight: 0.12191355
+      outWeight: 0.13128862
+    - serializedVersion: 3
+      time: 1.7479773
+      value: 1.8632898
       inSlope: 2
       outSlope: 2
       tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
+      weightedMode: 1
+      inWeight: 0.28665462
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
@@ -533,15 +618,25 @@ MonoBehaviour:
   offset: {x: 0, y: 0}
   regions:
   - height: 0
-    color: {r: 1, g: 0.93989503, b: 0, a: 1}
-  - height: 0.1
-    color: {r: 0.03810501, g: 0, b: 1, a: 1}
+    color: {r: 1, g: 0, b: 0.93099165, a: 1}
   - height: 0.2
-    color: {r: 0, g: 0.9578204, b: 1, a: 1}
-  - height: 0.3
-    color: {r: 0, g: 1, b: 0.08852029, a: 1}
+    color: {r: 0.4339623, g: 0.3966013, b: 0, a: 1}
   - height: 0.4
-    color: {r: 0.56585974, g: 0.6415094, b: 0.57268304, a: 1}
+    color: {r: 0.6603774, g: 0.6274745, b: 0.028034877, a: 1}
+  - height: 0.54
+    color: {r: 0.69411767, g: 0.6431373, b: 0.101960786, a: 1}
+  - height: 0.549
+    color: {r: 0.27520543, g: 0.574, b: 0.13891323, a: 1}
+  - height: 0.575
+    color: {r: 0.21368009, g: 0.3584906, b: 0.093004644, a: 1}
+  - height: 0.6
+    color: {r: 0.1436296, g: 0.277, b: 0.032829635, a: 1}
+  - height: 0.65
+    color: {r: 0.14553571, g: 0.16299999, b: 0.1300119, a: 1}
+  - height: 0.7
+    color: {r: 0.26415092, g: 0.26415092, b: 0.26415092, a: 1}
+  - height: 0.8
+    color: {r: 0.36502188, g: 0.376, b: 0.3567883, a: 1}
   - height: 1
     color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!114 &2088564257
@@ -588,7 +683,7 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
-  m_Intensity: 1
+  m_Intensity: 1.5
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
