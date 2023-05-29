@@ -83,7 +83,7 @@ public class EndlessTerrain : MonoBehaviour {
 
 		void OnMeshGenerated(MeshData meshData) {
 			meshFilter.mesh = meshData.CreateMesh();
-			meshCollider.sharedMesh = meshFilter.mesh;
+			meshCollider.sharedMesh = meshData.CreateColliderMesh();
 		}
 
 		public void UpdateTerrainChunk() {

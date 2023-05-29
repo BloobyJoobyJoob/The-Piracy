@@ -4,15 +4,15 @@ using UnityEngine;
 
 public static class MeshGenerater
 {
-    public static MeshData GenerateTerrainMesh(float[,] heightMap, TerrainType[] regions, float heightMultiplier, AnimationCurve _heightCurve)
+    public static MeshData GenerateTerrainMesh(float[,] heightMap, TerrainType[] regions, float heightMultiplier, AnimationCurve _heightCurve, int collisionVertSkipInterval, float minCollisionHeight)
     {
         AnimationCurve heightCurve = new AnimationCurve(_heightCurve.keys);
         int size = heightMap.GetLength(0);
-        int verticesPerSquare = 6;
-        MeshData meshData = new MeshData(size, size, verticesPerSquare);
+        int colSize = (size - 1) / collisionVertSkipInterval;
+        MeshData meshData = new MeshData(size, collisionVertSkipInterval);
         int vert = 0;
 
-        float halfSize = size / 2f;
+        float halfSize = (size) / 2f;
 
         for (var y = 0; y < size - 1; y++)
         {
@@ -35,14 +35,33 @@ public static class MeshGenerater
                 meshData.vertices[f] = new Vector3(x + 1 - halfSize, heightCurve.Evaluate(heightMap[x + 1, y + 1]) * heightMultiplier, y + 1 - halfSize);
 
                 AddColoredTri(a, c, b);
-                AddColoredTri(d, e, f);
+                AddColoredTri(d, e, f); 
 
-                vert += verticesPerSquare;
+                vert += 6;
+            }
+        }
+        
+        vert = 0;
+        for (var y = 0; y < colSize + 1; y++)
+        {
+            for (var x = 0; x < colSize + 1; x++)
+            {
+                int mapX = x * collisionVertSkipInterval;
+                int mapY = y * collisionVertSkipInterval;
+
+                meshData.colVerts[vert] = new Vector3(mapX - halfSize, heightCurve.Evaluate(heightMap[mapX, mapY]) * heightMultiplier, mapY - halfSize);
+                
+                if (x < colSize && y < colSize )
+                {
+                    meshData.AddColTriangle(vert + colSize + 1, vert + colSize + 2, vert);
+                    meshData.AddColTriangle(vert + 1, vert, vert + colSize + 2);
+                }
+                vert++;
             }
         }
 
         return meshData;
-
+        
         void AddColoredTri(int a, int b, int c)
         {
             Color color = PickColor((meshData.vertices[a].y + meshData.vertices[b].y + meshData.vertices[c].y) / 3 / heightMultiplier);
@@ -72,12 +91,30 @@ public class MeshData
     public Color[] colors;
     public int[] triangles;
 
+    public Vector3[] colVerts;
+    public int[] colTris;
+
     int triangleIndex;
-    public MeshData(int meshWidth, int meshHeight, int verticesPerSquare)
+    int colTriIndex;
+    public MeshData(int size, int collisionVertSkipInterval)
     {
-        vertices = new Vector3[meshWidth * meshHeight * verticesPerSquare];
-        colors = new Color[meshWidth * meshHeight * verticesPerSquare];
-        triangles = new int[meshWidth * meshHeight * verticesPerSquare];
+        vertices = new Vector3[size * size * 6];
+        colors = new Color[size * size * 6];
+        triangles = new int[(size - 1) * (size - 1) * 6];
+
+        colVerts = new Vector3[size * size / collisionVertSkipInterval];
+
+        int length = (size - 1) / collisionVertSkipInterval;
+
+        colTris = new int[length * length * 6];
+    }
+
+    public void AddColTriangle(int a, int b, int c)
+    {
+        colTris[colTriIndex] = a;
+        colTris[colTriIndex + 1] = b;
+        colTris[colTriIndex + 2] = c;
+        colTriIndex += 3;
     }
 
     public void AddTriangle(int a, int b, int c)
@@ -94,6 +131,15 @@ public class MeshData
         mesh.vertices = vertices;
         mesh.triangles = triangles;
         mesh.colors = colors;
+        mesh.RecalculateNormals();
+        return mesh;
+    }
+
+    public Mesh CreateColliderMesh()
+    {
+        Mesh mesh = new Mesh();
+        mesh.vertices = colVerts;
+        mesh.triangles = colTris;
         mesh.RecalculateNormals();
         return mesh;
     }

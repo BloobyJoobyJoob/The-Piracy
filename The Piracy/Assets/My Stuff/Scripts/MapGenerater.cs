@@ -12,16 +12,25 @@ public class TerrainType {
 
 public class MapGenerater : MonoBehaviour
 {
+    [Header("Map / Mesh")]
 	public Material terrainMaterial;
-	public int size = 10;
     public float meshHeightMultiplier;
     public AnimationCurve meshHeightCurve;
 	public int seed;
-	public float scale = 25;
-	public int octaves = 5;
-	public float persistance = 0.2f, lacunarity = 2;
+	public int size = 10;
 	public Vector2 offset = Vector2.zero;
 	public TerrainType[] regions;
+
+    [Header("Noise")]
+    public int octaves = 5;
+	public float persistance = 0.2f, lacunarity = 2;
+	public float scale = 25;
+
+    [Header("Collision")]
+
+    [Tooltip("Must be a factor of the size of the mesh")]
+    public int vertSkipInterval = 4;
+    public float minHeight = 20;
 
     Queue<MapData> meshQueue = new Queue<MapData>();
 
@@ -29,6 +38,12 @@ public class MapGenerater : MonoBehaviour
 
     private void Awake(){ 
         Singleton = this;
+
+        if (size / vertSkipInterval != Mathf.RoundToInt(size / vertSkipInterval))
+        {
+            Debug.LogError("VertSkipInterval is not a factor of size");
+            Destroy(this);
+        }
     }
     public void GenorateMeshOnThread(Vector2 center, Action<MeshData> callback){
         ThreadStart threadStart = delegate {
@@ -39,7 +54,7 @@ public class MapGenerater : MonoBehaviour
     }
 
     private void GeneratingMesh(Vector2 center, Action<MeshData> callback) {
-        MeshData meshData = MeshGenerater.GenerateTerrainMesh(GenerateMap(size + 1, seed, scale, octaves, persistance, lacunarity, center + offset), regions, meshHeightMultiplier, meshHeightCurve);
+        MeshData meshData = MeshGenerater.GenerateTerrainMesh(GenerateMap(size + 1, seed, scale, octaves, persistance, lacunarity, center + offset), regions, meshHeightMultiplier, meshHeightCurve, vertSkipInterval, minHeight);
             
         lock (meshQueue)
         {
@@ -54,7 +69,6 @@ public class MapGenerater : MonoBehaviour
             for (var i = 0; i < meshQueue.Count; i++)
             {
                 MapData mapData = meshQueue.Dequeue();
-                Mesh mesh = mapData.meshData.CreateMesh();
                 mapData.callback(mapData.meshData);
             }
         }
