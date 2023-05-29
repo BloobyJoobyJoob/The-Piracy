@@ -9,6 +9,7 @@
 /The Piracy/[Bb]uilds/
 /The Piracy/[Ll]ogs/
 /The Piracy/[Mm]emoryCaptures/
+/The Piracy_clone_0/
 
 # Never ignore Asset meta data
 !/[Aa]ssets/**/*.meta
