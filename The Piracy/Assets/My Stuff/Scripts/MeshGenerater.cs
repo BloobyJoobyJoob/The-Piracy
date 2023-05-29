@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public static class MeshGenerater
 {
-    public static MeshData GenerateTerrainMesh(float[,] heightMap, TerrainType[] regions, float heightMultiplier, AnimationCurve _heightCurve, int collisionVertSkipInterval, float minCollisionHeight)
+    public static MeshData GenerateTerrainMesh(float[,] heightMap, int seed, TerrainType[] regions, float colorVariation, float heightMultiplier, AnimationCurve _heightCurve, int collisionVertSkipInterval, float minCollisionHeight)
     {
+        System.Random random = new System.Random(seed);
+
         AnimationCurve heightCurve = new AnimationCurve(_heightCurve.keys);
         int size = heightMap.GetLength(0);
         int colSize = (size - 1) / collisionVertSkipInterval;
@@ -49,9 +52,11 @@ public static class MeshGenerater
                 int mapX = x * collisionVertSkipInterval;
                 int mapY = y * collisionVertSkipInterval;
 
-                meshData.colVerts[vert] = new Vector3(mapX - halfSize, heightCurve.Evaluate(heightMap[mapX, mapY]) * heightMultiplier, mapY - halfSize);
+                float evaluatedHeight = heightCurve.Evaluate(heightMap[mapX, mapY]) * heightMultiplier;
+
+                meshData.colVerts[vert] = new Vector3(mapX - halfSize, evaluatedHeight, mapY - halfSize);
                 
-                if (x < colSize && y < colSize )
+                if (x < colSize && y < colSize && evaluatedHeight > minCollisionHeight)
                 {
                     meshData.AddColTriangle(vert + colSize + 1, vert + colSize + 2, vert);
                     meshData.AddColTriangle(vert + 1, vert, vert + colSize + 2);
@@ -73,14 +78,28 @@ public static class MeshGenerater
 
         Color PickColor(float height)
         {
+            Color color = Color.black;
             for (int i = 0; i < regions.Length; i++)
             {
                 if (height < regions[i].height)
                 {
-                    return regions[i].color;
+                    color = regions[i].color;
+                    break;
                 }
             }
-            return Color.cyan;
+
+            if (color == Color.black)
+            {
+                color = regions[regions.Length - 1].color;
+            }
+
+            float variation = (((float)random.NextDouble() * 2) - 1) * colorVariation;
+
+            float r = color.r + ((1 - color.r) * variation); 
+            float g = color.g + ((1 - color.g) * variation);
+            float b = color.b + ((1 - color.b) * variation);
+
+            return new Color(r, g, b, 1);
         }
     }
 }

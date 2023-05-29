@@ -57,18 +57,18 @@ Material:
     - _Foam_Step: 0.9
     - _Foam_Step_2: -2.5
     - _Foam_Strength: 3.22
-    - _Noise_Scale: 500
+    - _Noise_Scale: 2.89
     - _QueueControl: 0
     - _QueueOffset: 0
     - _Remap_Max: 1
-    - _Scroll_Speed: 0.01
+    - _Scroll_Speed: 4
     - _Smoothness: 0
     - _Transperancy: 0
     - _Transperancy_Max: 0.9
     - _Transperancy_Min: 0
     - _Water_Bounce_Height: 2
     m_Colors:
-    - _Deep_Color: {r: 0.26162094, g: 0.45388287, b: 0.709, a: 0.92156863}
+    - _Deep_Color: {r: 0.28439835, g: 0.49871773, b: 0.7830189, a: 0.92156863}
     - _Foam_Color: {r: 1, g: 0.96013063, b: 0.8537736, a: 1}
-    - _Shallow_Color: {r: 0, g: 0.90975475, b: 1, a: 0.14117648}
+    - _Shallow_Color: {r: 0, g: 0.90975475, b: 1, a: 0.54509807}
   m_BuildTextureStacks: []

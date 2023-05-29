@@ -19,6 +19,8 @@ public class MapGenerater : MonoBehaviour
 	public int seed;
 	public int size = 10;
 	public Vector2 offset = Vector2.zero;
+
+    public float colorVariation;
 	public TerrainType[] regions;
 
     [Header("Noise")]
@@ -54,7 +56,7 @@ public class MapGenerater : MonoBehaviour
     }
 
     private void GeneratingMesh(Vector2 center, Action<MeshData> callback) {
-        MeshData meshData = MeshGenerater.GenerateTerrainMesh(GenerateMap(size + 1, seed, scale, octaves, persistance, lacunarity, center + offset), regions, meshHeightMultiplier, meshHeightCurve, vertSkipInterval, minHeight);
+        MeshData meshData = MeshGenerater.GenerateTerrainMesh(GenerateMap(size + 1, seed, scale, octaves, persistance, lacunarity, center + offset), seed, regions, colorVariation, meshHeightMultiplier, meshHeightCurve, vertSkipInterval, minHeight);
             
         lock (meshQueue)
         {
