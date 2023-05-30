@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Services.Lobbies;
+using Unity.Services.Lobbies.Models;
 using UnityEngine;
 
-public class NetworkHelper : MonoBehaviour
+public class GameNetworkHelper : MonoBehaviour
 {
-    public static NetworkHelper Singleton = null;
+    public static GameNetworkHelper Singleton = null;
+    public Lobby clientLobby {get; private set; }
     private void Awake()
     {
         if (Singleton != null)
@@ -14,6 +16,10 @@ public class NetworkHelper : MonoBehaviour
             return;
         }
         Singleton = this;
+    }
+
+    public void SetClientLobby(Lobby l){
+        clientLobby = l;
     }
 
     public IEnumerator LobbyHeartBeat(string lobbyID)
