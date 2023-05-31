@@ -11,24 +11,26 @@ using Unity.Services.Relay.Models;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System;
 
-public class NetworkOrchestrator : MonoBehaviour
+public class MenuNetworkHelper : MonoBehaviour
 {
     public TextMeshProUGUI explaination;
     public TMP_InputField LobbyCode;
-    public TMP_InputField MaxPlayers;
+    public Slider MaxPlayers;
     public TMP_InputField lobbyName;
-    public TMP_InputField mapName;
     public Button bigBackButton;
     public Button tryAgainButton;
     public Toggle PrivateLobby;
-    //public TMP_InputField mapName;
     public bool useRandomID = true;
-
+    public TMP_InputField noiseLacunarity;
+    public TMP_InputField noisePersistence;
+    public TMP_InputField noiseScale;
+    public TMP_InputField noiseOctaves;
+    public TMP_InputField worldSize;
+    public TMP_InputField seed;
     UnityTransport transport;
-
     Lobby lobby;
-
     private void Start()
     {
         transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
@@ -41,7 +43,7 @@ public class NetworkOrchestrator : MonoBehaviour
 
         if (useRandomID)
         {
-            initializationOptions.SetProfile(Random.Range(int.MinValue, int.MaxValue).ToString());
+            initializationOptions.SetProfile(UnityEngine.Random.Range(int.MinValue, int.MaxValue).ToString());
         }
         else
         {
@@ -93,9 +95,9 @@ public class NetworkOrchestrator : MonoBehaviour
         {
             lobby = await Lobbies.Instance.JoinLobbyByCodeAsync(LobbyCode.text);
         }
-        catch
+        catch (Exception e)
         {
-            explaination.text = "Failed to join Lobby";
+            explaination.text = "Failed to join Lobby" + e.Message;
             bigBackButton.gameObject.SetActive(true);
             throw;
         }
@@ -114,7 +116,8 @@ public class NetworkOrchestrator : MonoBehaviour
             bigBackButton.gameObject.SetActive(true);
             throw;
         }
-
+        
+        GameNetworkHelper.Singleton.SetClientLobby(lobby);
         transport.SetClientRelayData(a.RelayServer.IpV4, (ushort)a.RelayServer.Port, a.AllocationIdBytes, a.Key, a.ConnectionData, a.HostConnectionData);
 
         explaination.text = "Retrieved Relay Joincode";
@@ -152,10 +155,12 @@ public class NetworkOrchestrator : MonoBehaviour
             bigBackButton.gameObject.SetActive(true);
             throw;
         }
+        
+        explaination.text = "Retrieved Relay Joincode";
+        GameNetworkHelper.Singleton.SetClientLobby(lobby);
 
         transport.SetClientRelayData(a.RelayServer.IpV4, (ushort)a.RelayServer.Port, a.AllocationIdBytes, a.Key, a.ConnectionData, a.HostConnectionData);
 
-        explaination.text = "Retrieved Relay Joincode";
 
         NetworkManager.Singleton.StartClient();
     }
@@ -163,7 +168,7 @@ public class NetworkOrchestrator : MonoBehaviour
     public async void OnHostButton()
     {
         explaination.text = "Creating Relay Allocation";
-        int maxPlayers = int.Parse(MaxPlayers.text);
+        int maxPlayers = (int)MaxPlayers.value;
 
         Allocation a;
 
@@ -195,10 +200,17 @@ public class NetworkOrchestrator : MonoBehaviour
 
         Dictionary<string, DataObject> lobbyOptionsData = new();
 
-        lobbyOptionsData.Add("Map", new DataObject(visibility: DataObject.VisibilityOptions.Public, value: mapName.text));
         lobbyOptionsData.Add("JoinCode", new DataObject(visibility: DataObject.VisibilityOptions.Public, value: joinCode));
         lobbyOptionsData.Add("Location", new DataObject(visibility: DataObject.VisibilityOptions.Public, value: a.Region));
 
+        lobbyOptionsData.Add("MaxPlayers", new DataObject(visibility: DataObject.VisibilityOptions.Public, value: maxPlayers.ToString()));
+        lobbyOptionsData.Add("WorldSize", new DataObject(visibility: DataObject.VisibilityOptions.Public, value: worldSize.text));
+
+        lobbyOptionsData.Add("Seed", new DataObject(visibility: DataObject.VisibilityOptions.Member, value: seed.text == "" ? "0" : seed.text));
+        lobbyOptionsData.Add("NoiseScale", new DataObject(visibility: DataObject.VisibilityOptions.Member, value: noiseScale.text == "" ? "100" : noiseScale.text));
+        lobbyOptionsData.Add("NoiseOctaves", new DataObject(visibility: DataObject.VisibilityOptions.Member, value: noiseOctaves.text == "" ? "7" : noiseOctaves.text));
+        lobbyOptionsData.Add("NoiseLacunarity", new DataObject(visibility: DataObject.VisibilityOptions.Member, value: noiseLacunarity.text == "" ? "1.9" : noiseLacunarity.text));
+        lobbyOptionsData.Add("NoisePersistence", new DataObject(visibility: DataObject.VisibilityOptions.Member, value: noisePersistence.text == "" ? "0.5" : noisePersistence.text));
 
         CreateLobbyOptions lobbyOptions = new();
 
@@ -220,11 +232,12 @@ public class NetworkOrchestrator : MonoBehaviour
         explaination.text = "Sucessfully created lobby: " + lobby.LobbyCode;
         Debug.Log("Lobby Code: "+ lobby.LobbyCode);
 
-        NetworkHelper.Singleton.StartCoroutine(NetworkHelper.Singleton.LobbyHeartBeat(lobby.Id));
+        GameNetworkHelper.Singleton.StartCoroutine(GameNetworkHelper.Singleton.LobbyHeartBeat(lobby.Id));
+        GameNetworkHelper.Singleton.SetClientLobby(lobby);
 
         transport.SetHostRelayData(a.RelayServer.IpV4, (ushort)a.RelayServer.Port, a.AllocationIdBytes, a.Key, a.ConnectionData);
 
-        SceneManager.LoadScene("Town");
+        SceneManager.LoadScene("Main");
 
         NetworkManager.Singleton.StartHost();
     }

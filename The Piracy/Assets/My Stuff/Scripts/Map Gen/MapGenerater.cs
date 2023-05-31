@@ -38,6 +38,14 @@ public class MapGenerater : MonoBehaviour
 
     public static MapGenerater Singleton;
 
+    public void SetMapInformation(int seed, int octaves, float persistance, float scale, float lacunarity){
+        this.seed = seed;
+        this.octaves = octaves;
+        this.persistance = persistance;
+        this.scale = scale;
+        this.lacunarity = lacunarity;
+    }
+
     private void Awake(){ 
         Singleton = this;
 
