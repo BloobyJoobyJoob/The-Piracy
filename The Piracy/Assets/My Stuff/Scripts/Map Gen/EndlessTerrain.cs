@@ -1,13 +1,29 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.VFX;
+
+[System.Serializable]
+public class SharedFoliageData {
+	[HideInInspector]
+	public int triangleCountNameID;
+	[HideInInspector]
+	public int terrainMeshNameID;
+	[HideInInspector]
+	public int seedNameID;
+}
 
 public class EndlessTerrain : MonoBehaviour {
 
 	public float maxViewDst = 450;
 	public Transform viewer;
-
 	public static Vector2 viewerPosition;
+	public string triangleCountName;
+	public string terrainMeshName;
+	public string seedName;
+	public VisualEffect[] foliagePrefabs;
+
+	public SharedFoliageData foliageData;
 	int chunkSize;
 	int chunksVisibleInViewDst;
 
@@ -17,6 +33,10 @@ public class EndlessTerrain : MonoBehaviour {
 	void Start() {
 		chunkSize = MapGenerater.Singleton.size;
 		chunksVisibleInViewDst = Mathf.RoundToInt(maxViewDst / chunkSize);
+		
+		foliageData.triangleCountNameID = Shader.PropertyToID(triangleCountName);
+		foliageData.terrainMeshNameID = Shader.PropertyToID(terrainMeshName);
+		foliageData.seedNameID = Shader.PropertyToID(seedName);
 	}
 
 	void Update() {
@@ -44,7 +64,7 @@ public class EndlessTerrain : MonoBehaviour {
 						terrainChunksVisibleLastUpdate.Add (terrainChunkDictionary [viewedChunkCoord]);
 					}
 				} else {
-					terrainChunkDictionary.Add (viewedChunkCoord, new TerrainChunk (viewedChunkCoord, chunkSize, transform, maxViewDst));
+					terrainChunkDictionary.Add (viewedChunkCoord, new TerrainChunk (viewedChunkCoord, chunkSize, transform, maxViewDst, foliageData, foliagePrefabs));
 				}
 			}
 		}
@@ -53,7 +73,8 @@ public class EndlessTerrain : MonoBehaviour {
 	public class TerrainChunk {
 
 		GameObject meshObject;
-
+		SharedFoliageData sharedFoliageData;
+		VisualEffect[] foliagePrefabs;
 		MeshRenderer meshRenderer;
 		MeshCollider meshCollider;
 		MeshFilter meshFilter;
@@ -61,7 +82,7 @@ public class EndlessTerrain : MonoBehaviour {
 		Bounds bounds;
 
         float viewDst;
-		public TerrainChunk(Vector2 coord, int size, Transform parent, float maxViewDst) {
+		public TerrainChunk(Vector2 coord, int size, Transform parent, float maxViewDst, SharedFoliageData sharedFoliageData, VisualEffect[] foliagePrefabs) {
 
             viewDst = maxViewDst;
 			position = coord * size;
@@ -76,7 +97,9 @@ public class EndlessTerrain : MonoBehaviour {
 
 			meshObject.transform.position = positionV3;
 			meshObject.transform.parent = parent;
-			SetVisible(false);
+
+			this.sharedFoliageData = sharedFoliageData;
+			this.foliagePrefabs = foliagePrefabs;
 
 			MapGenerater.Singleton.GenorateMeshOnThread(position, OnMeshGenerated);
 		}
@@ -84,6 +107,22 @@ public class EndlessTerrain : MonoBehaviour {
 		void OnMeshGenerated(MeshData meshData) {
 			meshFilter.mesh = meshData.CreateMesh();
 			meshCollider.sharedMesh = meshData.CreateColliderMesh();
+
+			foreach (VisualEffect visualEffect in foliagePrefabs)
+			{
+				VisualEffect vfx = Instantiate(visualEffect, meshObject.transform);
+
+				vfx.SetMesh(sharedFoliageData.terrainMeshNameID, meshFilter.mesh);
+				vfx.SetInt(sharedFoliageData.triangleCountNameID, meshFilter.mesh.triangles.Length - 1);
+
+				System.Random random = new System.Random(meshObject.transform.position.GetHashCode());
+
+				vfx.SetFloat(sharedFoliageData.seedNameID, (float)random.Next() / (float)int.MaxValue);
+
+				vfx.Play();
+			}
+
+			SetVisible(false);
 		}
 
 		public void UpdateTerrainChunk() {
