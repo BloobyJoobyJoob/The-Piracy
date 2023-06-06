@@ -3,20 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
+using Unity.Netcode;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Singleton = null;
 
+    public PlayerController[] PlayerControllers = new PlayerController[100];
     void Awake(){
         if (Singleton != null){
             Debug.LogError("poos");
         }
         Singleton = this;
+
+        NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
     }
 
     void Start(){
-        
         var data = GameNetworkHelper.Singleton.clientLobby.Data;
 
         int seed = data["Seed"].Value == "0" ? new System.Random().Next() : int.Parse(data["Seed"].Value);
@@ -26,5 +29,9 @@ public class GameManager : MonoBehaviour
         float lacunarity = float.Parse(data["NoiseLacunarity"].Value);
 
         MapGenerater.Singleton.SetMapInformation(seed, octaves, persistance, scale, lacunarity);
+    }
+
+    void OnClientConnected(ulong id){
+        //NetworkManager.Singleton.SpawnManager
     }
 }
