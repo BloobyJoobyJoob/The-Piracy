@@ -6,7 +6,7 @@ using Unity.Services.Lobbies.Models;
 
 public class GameManager : MonoBehaviour
 {
-    public GameManager Singleton = null;
+    public static GameManager Singleton = null;
 
     void Awake(){
         if (Singleton != null){
