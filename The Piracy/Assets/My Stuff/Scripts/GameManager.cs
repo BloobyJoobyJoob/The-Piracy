@@ -8,7 +8,7 @@ using Unity.Netcode;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Singleton = null;
-
+    public GameObject PlayerPrefab;
     public PlayerController[] PlayerControllers = new PlayerController[100];
     void Awake(){
         if (Singleton != null){
@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
         Singleton = this;
 
         NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
+        SpawnPlayer(NetworkManager.ServerClientId);
     }
 
     void Start(){
@@ -31,7 +32,16 @@ public class GameManager : MonoBehaviour
         MapGenerater.Singleton.SetMapInformation(seed, octaves, persistance, scale, lacunarity);
     }
 
+    private void SpawnPlayer(ulong id){
+        NetworkObject player = Instantiate(PlayerPrefab).GetComponent<NetworkObject>();
+        player.SpawnWithOwnership(id);
+    }
+
     void OnClientConnected(ulong id){
-        //NetworkManager.Singleton.SpawnManager
+        
+        if (NetworkManager.Singleton.IsServer)
+        {
+            SpawnPlayer(id);
+        }
     }
 }
