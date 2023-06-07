@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: Camera Info
-  m_EditorClassIdentifier: Assembly-CSharp::CameraInfo
+  m_Script: {fileID: 11500000, guid: 97f8c343f6c270843b37c9782687d789, type: 3}
+  m_Name: CameraInfo
+  m_EditorClassIdentifier: 
   FOV: 40
   FollowOffset: {x: 0, y: 5, z: 0}
   MaxViewDistance: 80

@@ -10,16 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a2b45b8dd12d6184ca059c704c0c473a, type: 3}
-  m_Name: Ship Info
+  m_Name: ShipInfo
   m_EditorClassIdentifier: 
   Ship: {fileID: -4313514220916588826, guid: b90a08b377e3f2742aa5e459136ce0d2, type: 3}
   Mass: 30
-  Drag: 0.1
-  AngularDrag: 0.03
-  Force: 500
-  Torque: 5
-  MaxTorque: 500
+  Drag: 0.4
+  AngularDrag: 0.5
+  Force: 200
+  Torque: 50
+  MaxTorque: 100
   CenterOfMass: {x: 0, y: -2, z: 0}
   BaseHealth: 5
   BuoyancyStrength: 0.2
   WaterHeight: 21
+  CameraInfo: {fileID: 11400000, guid: f414a4c0be5afcd44a04d2d081a132be, type: 2}

@@ -30,6 +30,8 @@ public class GameManager : MonoBehaviour
         float lacunarity = float.Parse(data["NoiseLacunarity"].Value);
 
         MapGenerater.Singleton.SetMapInformation(seed, octaves, persistance, scale, lacunarity);
+
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void SpawnPlayer(ulong id){

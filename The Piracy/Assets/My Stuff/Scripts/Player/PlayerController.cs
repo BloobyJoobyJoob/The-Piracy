@@ -58,9 +58,10 @@ public class PlayerController : NetworkBehaviour
 
         if (IsOwner && IsSpawned)
         {
-            rb.AddForce(Vector3.forward * ShipInfo.Force * Mathf.Clamp(movement.y, 0, 1) * Time.timeScale);
+            Vector3 force = new Vector3(transform.forward.x, 0, transform.forward.z) * ShipInfo.Force * Mathf.Clamp(movement.y, 0, 1) * Time.timeScale;
+            rb.AddForce(force);
 
-            Vector3 torque = Vector3.up * ShipInfo.Torque * movement.x * Time.timeScale * rb.velocity.x;
+            Vector3 torque = Vector3.up * ShipInfo.Torque * movement.x * Time.timeScale * force.z;
 
             rb.AddTorque(new Vector3(0, Mathf.Clamp(torque.y, -ShipInfo.MaxTorque, ShipInfo.MaxTorque), 0));
 
