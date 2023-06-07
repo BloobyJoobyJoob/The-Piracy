@@ -237,8 +237,15 @@ public class MenuNetworkHelper : MonoBehaviour
 
         transport.SetHostRelayData(a.RelayServer.IpV4, (ushort)a.RelayServer.Port, a.AllocationIdBytes, a.Key, a.ConnectionData);
 
-        SceneManager.LoadScene("Main");
-
-        NetworkManager.Singleton.StartHost();
+        if (NetworkManager.Singleton.StartHost())
+        {
+            explaination.text = "Loading game...";
+            SceneManager.LoadScene("Main");
+        }
+        else
+        {
+            explaination.text = "Failed to host server";
+            bigBackButton.gameObject.SetActive(true);
+        }
     }
 }

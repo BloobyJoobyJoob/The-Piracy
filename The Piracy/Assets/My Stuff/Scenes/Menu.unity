@@ -4223,7 +4223,7 @@ GameObject:
   - component: {fileID: 8371656380447033451}
   - component: {fileID: 8371656380447033444}
   m_Layer: 5
-  m_Name: Network Orchestrator
+  m_Name: Menu Network Helper
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6945,7 +6945,8 @@ MonoBehaviour:
     NetworkTransport: {fileID: 8371656381556724419}
     PlayerPrefab: {fileID: 0}
     Prefabs:
-      NetworkPrefabsLists: []
+      NetworkPrefabsLists:
+      - {fileID: 11400000, guid: 4f8637f0e2abe504c9f5e3a264982cca, type: 2}
     TickRate: 30
     ClientConnectionBufferTimeout: 10
     ConnectionApproval: 0

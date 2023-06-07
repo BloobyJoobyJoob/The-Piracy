@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2b45b8dd12d6184ca059c704c0c473a, type: 3}
+  m_Name: Ship Info
+  m_EditorClassIdentifier: 
+  Ship: {fileID: -4313514220916588826, guid: b90a08b377e3f2742aa5e459136ce0d2, type: 3}
+  Mass: 30
+  Drag: 0.1
+  AngularDrag: 0.03
+  Force: 500
+  Torque: 5
+  MaxTorque: 500
+  CenterOfMass: {x: 0, y: -2, z: 0}
+  BaseHealth: 5
+  BuoyancyStrength: 0.2
+  WaterHeight: 21

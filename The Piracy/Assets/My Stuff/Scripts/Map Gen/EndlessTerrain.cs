@@ -5,16 +5,14 @@ using UnityEngine.VFX;
 
 [System.Serializable]
 public class SharedFoliageData {
-	[HideInInspector]
 	public int triangleCountNameID;
-	[HideInInspector]
 	public int terrainMeshNameID;
-	[HideInInspector]
 	public int seedNameID;
 }
 
 public class EndlessTerrain : MonoBehaviour {
 
+	public float chunkUpdateDelay = 1;
 	public float maxViewDst = 450;
 	public Transform viewer;
 	public static Vector2 viewerPosition;
@@ -23,12 +21,13 @@ public class EndlessTerrain : MonoBehaviour {
 	public string seedName;
 	public VisualEffect[] foliagePrefabs;
 
-	public SharedFoliageData foliageData;
+	public SharedFoliageData foliageData = new();
 	int chunkSize;
 	int chunksVisibleInViewDst;
 
 	Dictionary<Vector2, TerrainChunk> terrainChunkDictionary = new Dictionary<Vector2, TerrainChunk>();
 	List<TerrainChunk> terrainChunksVisibleLastUpdate = new List<TerrainChunk>();
+	List<TerrainChunk> terrainChunksToCheck = new List<TerrainChunk>();
 
 	void Start() {
 		chunkSize = MapGenerater.Singleton.size;
@@ -37,17 +36,18 @@ public class EndlessTerrain : MonoBehaviour {
 		foliageData.triangleCountNameID = Shader.PropertyToID(triangleCountName);
 		foliageData.terrainMeshNameID = Shader.PropertyToID(terrainMeshName);
 		foliageData.seedNameID = Shader.PropertyToID(seedName);
-	}
 
-	void Update() {
-		viewerPosition = new Vector2 (viewer.position.x, viewer.position.z);
-		UpdateVisibleChunks ();
+		InvokeRepeating("UpdateVisibleChunks", 0, chunkUpdateDelay);
 	}
 		
 	void UpdateVisibleChunks() {
+		
+		viewerPosition = new Vector2 (viewer.position.x, viewer.position.z);
 
+		terrainChunksToCheck.Clear();
 		for (int i = 0; i < terrainChunksVisibleLastUpdate.Count; i++) {
 			terrainChunksVisibleLastUpdate [i].SetVisible (false);
+			terrainChunksToCheck.Add(terrainChunksVisibleLastUpdate [i]);
 		}
 		terrainChunksVisibleLastUpdate.Clear ();
 			
@@ -66,6 +66,16 @@ public class EndlessTerrain : MonoBehaviour {
 				} else {
 					terrainChunkDictionary.Add (viewedChunkCoord, new TerrainChunk (viewedChunkCoord, chunkSize, transform, maxViewDst, foliageData, foliagePrefabs));
 				}
+
+				terrainChunksToCheck.Add(terrainChunkDictionary [viewedChunkCoord]);
+			}
+		}
+
+		foreach (TerrainChunk chunk in terrainChunksToCheck)
+		{
+			if (chunk.IsVisible() != chunk.IsActive())
+			{
+				chunk.SetActive(chunk.IsVisible());
 			}
 		}
 	}
@@ -80,6 +90,8 @@ public class EndlessTerrain : MonoBehaviour {
 		MeshFilter meshFilter;
 		Vector2 position;
 		Bounds bounds;
+		
+		bool visability = false;
 
         float viewDst;
 		public TerrainChunk(Vector2 coord, int size, Transform parent, float maxViewDst, SharedFoliageData sharedFoliageData, VisualEffect[] foliagePrefabs) {
@@ -132,12 +144,19 @@ public class EndlessTerrain : MonoBehaviour {
 		}
 
 		public void SetVisible(bool visible) {
-			meshObject.SetActive (visible);
+			visability = visible;
 		}
 
 		public bool IsVisible() {
+			return visability;
+		}
+
+		public bool IsActive() {
 			return meshObject.activeSelf;
 		}
 
+		public void SetActive(bool active){
+			meshObject.SetActive(active);
+		}
 	}
 }
