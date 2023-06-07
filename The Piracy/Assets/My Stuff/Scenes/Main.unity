@@ -33754,8 +33754,8 @@ MonoBehaviour:
     Value: 20
     m_SpeedMode: 1
     m_MaxSpeed: 0.5
-    m_AccelTime: 2
-    m_DecelTime: 2
+    m_AccelTime: 0.5
+    m_DecelTime: 0.5
     m_InputAxisName: Mouse Y
     m_InputAxisValue: 0
     m_InvertInput: 1
@@ -33778,8 +33778,8 @@ MonoBehaviour:
     Value: -70
     m_SpeedMode: 1
     m_MaxSpeed: 0.5
-    m_AccelTime: 2
-    m_DecelTime: 2
+    m_AccelTime: 0.5
+    m_DecelTime: 0.5
     m_InputAxisName: Mouse X
     m_InputAxisValue: 0
     m_InvertInput: 0
@@ -58766,19 +58766,19 @@ MonoBehaviour:
       time: 0.9481131
       value: 0.6558152
       inSlope: 1.148696
-      outSlope: 1.7476513
+      outSlope: 0.82835984
       tangentMode: 1
       weightedMode: 3
       inWeight: 0.14420524
-      outWeight: 0.75089854
+      outWeight: 0.78402203
     - serializedVersion: 3
-      time: 1.1989598
-      value: 1.1528927
-      inSlope: 3.1347654
+      time: 1.2281041
+      value: 1.0239712
+      inSlope: 0.98484945
       outSlope: 0.8774384
       tangentMode: 1
       weightedMode: 3
-      inWeight: 0.35922024
+      inWeight: 0.47207114
       outWeight: 0.37593704
     - serializedVersion: 3
       time: 1.7479773
@@ -58824,7 +58824,7 @@ MonoBehaviour:
   lacunarity: 1.9
   scale: 100
   vertSkipInterval: 6
-  minHeight: 12
+  minHeight: 15
 --- !u!114 &2088564257
 MonoBehaviour:
   m_ObjectHideFlags: 0

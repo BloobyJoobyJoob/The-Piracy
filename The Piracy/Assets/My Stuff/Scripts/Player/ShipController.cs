@@ -4,6 +4,5 @@ using UnityEngine;
 
 public class ShipController : MonoBehaviour
 {
-    public Transform[] FireSpreadLocations;
-    public Transform[] Cannons;
+    public Transform[] floatPoints;
 }

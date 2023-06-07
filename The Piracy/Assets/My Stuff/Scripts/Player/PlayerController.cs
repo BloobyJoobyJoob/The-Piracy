@@ -20,10 +20,10 @@ public class PlayerController : NetworkBehaviour
 
     [Tooltip("First Item is the default")]
     public ShipInfo[] Ships;
-    public GameObject Ship {get; private set;}
+    public ShipController ShipController {get; private set;}
 
     private void Awake() {
-        shipInfoChanged += OnShipInfoChanged;
+
     }
     public override void OnNetworkSpawn(){
         GameManager.Singleton.PlayerControllers[OwnerClientId] = this;
@@ -50,36 +50,36 @@ public class PlayerController : NetworkBehaviour
         }
     }
     private void Start() {
-        UpdateShipInfo(Ships[0]);
+        UpdateShipInfo(Ships[0], true);
 
         transform.position = new Vector3(transform.position.x, ShipInfo.WaterHeight, transform.position.z);
+        Debug.Log(transform.position);
     }
     private void FixedUpdate() {
 
         if (IsOwner && IsSpawned)
         {
-            Vector3 force = new Vector3(transform.forward.x, 0, transform.forward.z) * ShipInfo.Force * Mathf.Clamp(movement.y, 0, 1) * Time.timeScale;
-            rb.AddForce(force);
+            rb.AddForce(new Vector3(transform.forward.x, 0, transform.forward.z) * ShipInfo.Force * Mathf.Clamp(movement.y, 0, 1) * Time.timeScale);
 
-            Vector3 torque = Vector3.up * ShipInfo.Torque * movement.x * Time.timeScale * force.z;
+            Vector3 torque = Vector3.up * ShipInfo.Torque * movement.x * Time.timeScale * new Vector2(rb.velocity.x, rb.velocity.z).magnitude;
 
             rb.AddTorque(new Vector3(0, Mathf.Clamp(torque.y, -ShipInfo.MaxTorque, ShipInfo.MaxTorque), 0));
 
-            if (transform.position.y < ShipInfo.WaterHeight)
-            {
-                rb.AddForce(Vector3.up * ShipInfo.BuoyancyStrength * (ShipInfo.WaterHeight - transform.position.y), ForceMode.VelocityChange);
-            }
+            FloatShip(ShipController.floatPoints);
         }
     }
-    public void UpdateShipInfo(ShipInfo info){
-        shipInfoChanged.Invoke(info);
-    }
 
-    public void UpdateShipInfo(int ShipInfoIndex){
-        UpdateShipInfo(Ships[ShipInfoIndex]);
-    }
-
-    private void OnShipInfoChanged(ShipInfo info){
+    void FloatShip(Transform[] floatingPoints){
+        
+        foreach (Transform point in floatingPoints)
+        {
+            if (point.position.y < ShipInfo.WaterHeight)
+            {
+                rb.AddForceAtPosition(Vector3.up * ShipInfo.BuoyancyStrength * (ShipInfo.WaterHeight - point.position.y), point.position, ForceMode.VelocityChange);
+            }
+        }
+    } 
+    public void UpdateShipInfo(ShipInfo info, bool firstSpawn = false){
         ShipInfo = info;
         rb.mass = info.Mass;
         rb.drag = info.Drag;
@@ -90,9 +90,23 @@ public class PlayerController : NetworkBehaviour
         virtualCameraFollow.m_CameraDistance = scroll;
         
         virtualCamera.m_Lens.FieldOfView = info.CameraInfo.FOV;
+        
+        if (!firstSpawn)
+        {
+            Destroy(ShipController.gameObject);  
+        }
 
-        Destroy(Ship);
-        Ship = Instantiate(info.Ship.gameObject, transform);
+        ShipController = Instantiate(info.Ship.gameObject, transform).GetComponent<ShipController>();
+
+        try
+        {
+           shipInfoChanged.Invoke(ShipInfo); 
+        }
+        catch {}
+    }
+
+    public void UpdateShipInfo(int ShipInfoIndex, bool firstSpawn = false){
+        UpdateShipInfo(Ships[ShipInfoIndex], firstSpawn);
     }
 
     public void OnMove(InputAction.CallbackContext context){

@@ -120,16 +120,16 @@ public class EndlessTerrain : MonoBehaviour {
 			meshFilter.mesh = meshData.CreateMesh();
 			meshCollider.sharedMesh = meshData.CreateColliderMesh();
 
-			foreach (VisualEffect visualEffect in foliagePrefabs)
+			for (var i = 0; i < foliagePrefabs.Length; i++)
 			{
-				VisualEffect vfx = Instantiate(visualEffect, meshObject.transform);
+				VisualEffect vfx = Instantiate(foliagePrefabs[i], meshObject.transform);
 
 				vfx.SetMesh(sharedFoliageData.terrainMeshNameID, meshFilter.mesh);
 				vfx.SetInt(sharedFoliageData.triangleCountNameID, meshFilter.mesh.triangles.Length - 1);
 
 				System.Random random = new System.Random(meshObject.transform.position.GetHashCode());
 
-				vfx.SetFloat(sharedFoliageData.seedNameID, (float)random.Next() / (float)int.MaxValue);
+				vfx.SetFloat(sharedFoliageData.seedNameID, (float)random.Next() / (float)int.MaxValue * (i * 1.2f));
 
 				vfx.Play();
 			}

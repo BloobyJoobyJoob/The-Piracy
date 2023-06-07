@@ -53,10 +53,11 @@ Material:
     - _Depth_Influence: 0.84
     - _Depth_Strength: 0.9
     - _Foam_Offset: 0.2
-    - _Foam_Scale: 200
-    - _Foam_Step: 0.9
+    - _Foam_Scale: 0.6
+    - _Foam_Speed: 0.6
+    - _Foam_Step: 0.7
     - _Foam_Step_2: -2.5
-    - _Foam_Strength: 3.22
+    - _Foam_Strength: 4
     - _Noise_Scale: 10.421
     - _QueueControl: 0
     - _QueueOffset: 0
