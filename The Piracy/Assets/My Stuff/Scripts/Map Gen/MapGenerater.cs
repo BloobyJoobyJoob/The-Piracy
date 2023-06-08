@@ -36,6 +36,8 @@ public class MapGenerater : MonoBehaviour
 
     Queue<MapData> meshQueue = new Queue<MapData>();
 
+    public bool loadedAllChunks {get; private set;} = false; 
+
     public static MapGenerater Singleton;
 
     public void SetMapInformation(int seed, int octaves, float persistance, float scale, float lacunarity){
@@ -76,11 +78,16 @@ public class MapGenerater : MonoBehaviour
     void Update() {
         if (meshQueue.Count > 0)
         {
+            loadedAllChunks = false;
             for (var i = 0; i < meshQueue.Count; i++)
             {
                 MapData mapData = meshQueue.Dequeue();
                 mapData.callback(mapData.meshData);
             }
+        }
+        else
+        {
+            loadedAllChunks = true;
         }
     }
 

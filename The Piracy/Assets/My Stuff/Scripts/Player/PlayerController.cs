@@ -23,13 +23,14 @@ public class PlayerController : NetworkBehaviour
     public ShipController ShipController {get; private set;}
 
     private void Awake() {
-
+        rb = GetComponent<Rigidbody>();
+        playerInput = GetComponent<PlayerInput>();
+        
+        virtualCamera = GameObject.FindGameObjectWithTag("Virtual Camera").GetComponent<CinemachineVirtualCamera>();
+        virtualCameraFollow = virtualCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
     }
     public override void OnNetworkSpawn(){
         GameManager.Singleton.PlayerControllers[OwnerClientId] = this;
-
-        rb = GetComponent<Rigidbody>();
-        playerInput = GetComponent<PlayerInput>();
 
         if (IsOwner)
         {
@@ -37,11 +38,8 @@ public class PlayerController : NetworkBehaviour
             center.parent = transform;
             center.transform.localPosition = Vector3.zero;
 
-            virtualCamera = GameObject.FindGameObjectWithTag("Virtual Camera").GetComponent<CinemachineVirtualCamera>();
             virtualCamera.Follow = transform;
             virtualCamera.LookAt = transform;
-
-            virtualCameraFollow = virtualCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
         }
         else
         {
@@ -53,7 +51,6 @@ public class PlayerController : NetworkBehaviour
         UpdateShipInfo(Ships[0], true);
 
         transform.position = new Vector3(transform.position.x, ShipInfo.WaterHeight, transform.position.z);
-        Debug.Log(transform.position);
     }
     private void FixedUpdate() {
 

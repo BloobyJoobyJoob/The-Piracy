@@ -204,10 +204,10 @@ public class MenuNetworkHelper : MonoBehaviour
         lobbyOptionsData.Add("Location", new DataObject(visibility: DataObject.VisibilityOptions.Public, value: a.Region));
 
         lobbyOptionsData.Add("MaxPlayers", new DataObject(visibility: DataObject.VisibilityOptions.Public, value: maxPlayers.ToString()));
-        lobbyOptionsData.Add("WorldSize", new DataObject(visibility: DataObject.VisibilityOptions.Public, value: worldSize.text));
+        lobbyOptionsData.Add("WorldSize", new DataObject(visibility: DataObject.VisibilityOptions.Public, value: worldSize.text == "" ? "1000" : worldSize.text));
 
-        lobbyOptionsData.Add("Seed", new DataObject(visibility: DataObject.VisibilityOptions.Member, value: seed.text == "" ? "0" : seed.text));
-        lobbyOptionsData.Add("NoiseScale", new DataObject(visibility: DataObject.VisibilityOptions.Member, value: noiseScale.text == "" ? "100" : noiseScale.text));
+        lobbyOptionsData.Add("Seed", new DataObject(visibility: DataObject.VisibilityOptions.Member, value: seed.text == "" ? UnityEngine.Random.Range(int.MinValue, int.MaxValue).ToString() : seed.text));
+        lobbyOptionsData.Add("NoiseScale", new DataObject(visibility: DataObject.VisibilityOptions.Member, value: noiseScale.text == "" ? "85" : noiseScale.text));
         lobbyOptionsData.Add("NoiseOctaves", new DataObject(visibility: DataObject.VisibilityOptions.Member, value: noiseOctaves.text == "" ? "7" : noiseOctaves.text));
         lobbyOptionsData.Add("NoiseLacunarity", new DataObject(visibility: DataObject.VisibilityOptions.Member, value: noiseLacunarity.text == "" ? "2" : noiseLacunarity.text));
         lobbyOptionsData.Add("NoisePersistence", new DataObject(visibility: DataObject.VisibilityOptions.Member, value: noisePersistence.text == "" ? "0.5" : noisePersistence.text));
