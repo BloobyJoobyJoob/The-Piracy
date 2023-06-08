@@ -9,7 +9,7 @@ using System;
 public class PlayerController : NetworkBehaviour
 {
     public Action<ShipInfo> shipInfoChanged;
-    public ShipInfo ShipInfo {get; private set;}
+    public ShipInfo ShipInfo { get; private set; }
     Rigidbody rb;
     CinemachineVirtualCamera virtualCamera;
     CinemachineFramingTransposer virtualCameraFollow;
@@ -20,7 +20,9 @@ public class PlayerController : NetworkBehaviour
 
     [Tooltip("First Item is the default")]
     public ShipInfo[] Ships;
-    public ShipController ShipController {get; private set;}
+    public ShipController ShipController { get; private set; }
+
+    public bool Spawned { get; private set; } = false;
 
     private void Awake() {
         rb = GetComponent<Rigidbody>();
@@ -52,9 +54,32 @@ public class PlayerController : NetworkBehaviour
 
         transform.position = new Vector3(transform.position.x, ShipInfo.WaterHeight, transform.position.z);
     }
+
+
+    private void Update()
+    {
+        if (MapGenerater.Singleton.loadedAllChunks && !Spawned)
+        {
+            Spawned = true;
+            Spawn();
+        }
+    }
+    private void Spawn()
+    {
+        float halfSize = MapGenerater.Singleton.size / 2;
+
+        //spawn at random pos in chunk 
+        transform.position = new Vector3(UnityEngine.Random.Range(-halfSize, halfSize), transform.position.y, UnityEngine.Random.Range(-halfSize, halfSize));
+
+        ShipController.gameObject.SetActive(true);
+        rb.isKinematic = false;
+        playerInput.enabled = true;
+        Spawned = true;
+    }
+
     private void FixedUpdate() {
 
-        if (IsOwner && IsSpawned)
+        if (IsOwner && IsSpawned && Spawned)
         {
             rb.AddForce(new Vector3(transform.forward.x, 0, transform.forward.z) * ShipInfo.Force * Mathf.Clamp(movement.y, 0, 1) * Time.timeScale);
 

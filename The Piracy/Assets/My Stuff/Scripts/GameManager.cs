@@ -29,8 +29,12 @@ public class GameManager : MonoBehaviour
         float scale = float.Parse(data["NoiseScale"].Value);
         float lacunarity = float.Parse(data["NoiseLacunarity"].Value);
         worldSize = float.Parse(data["WorldSize"].Value);
-        
-        MapGenerater.Singleton.SetMapInformation(seed, octaves, persistance, scale, lacunarity);
+
+        int worldChunkWidth = Mathf.FloorToInt(worldSize * 0.5f / MapGenerater.Singleton.size);
+
+        MapGenerater.Singleton.SetMapInformation(seed, octaves, persistance, scale, lacunarity, new Vector2(
+            Random.Range(-worldChunkWidth, worldChunkWidth), 
+            Random.Range(-worldChunkWidth, worldChunkWidth)));
 
         Cursor.lockState = CursorLockMode.Locked;
         
@@ -43,10 +47,7 @@ public class GameManager : MonoBehaviour
     //Runs Server side
     private void SpawnPlayer(ulong id){
 
-        Vector3 spawnPosition = new Vector3(Random.Range(-worldSize, worldSize), 0, Random.Range(-worldSize, worldSize));
-
-        Debug.Log(spawnPosition);
-        NetworkObject player = Instantiate(PlayerPrefab, spawnPosition, Quaternion.identity).GetComponent<NetworkObject>();
+        NetworkObject player = Instantiate(PlayerPrefab).GetComponent<NetworkObject>();
         player.SpawnWithOwnership(id);
     }
 

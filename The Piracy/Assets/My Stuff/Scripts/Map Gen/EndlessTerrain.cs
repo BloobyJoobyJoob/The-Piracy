@@ -37,6 +37,7 @@ public class EndlessTerrain : MonoBehaviour {
 		foliageData.terrainMeshNameID = Shader.PropertyToID(terrainMeshName);
 		foliageData.seedNameID = Shader.PropertyToID(seedName);
 
+		UpdateVisibleChunks();
 		InvokeRepeating("UpdateVisibleChunks", 0, chunkUpdateDelay);
 	}
 		

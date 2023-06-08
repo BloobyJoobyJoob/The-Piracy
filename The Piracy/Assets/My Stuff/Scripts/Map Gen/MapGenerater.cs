@@ -40,12 +40,13 @@ public class MapGenerater : MonoBehaviour
 
     public static MapGenerater Singleton;
 
-    public void SetMapInformation(int seed, int octaves, float persistance, float scale, float lacunarity){
+    public void SetMapInformation(int seed, int octaves, float persistance, float scale, float lacunarity, Vector2 offset){
         this.seed = seed;
         this.octaves = octaves;
         this.persistance = persistance;
         this.scale = scale;
         this.lacunarity = lacunarity;
+        this.offset = offset;
     }
 
     private void Awake(){ 
@@ -74,8 +75,8 @@ public class MapGenerater : MonoBehaviour
         }
     }
 
-
     void Update() {
+
         if (meshQueue.Count > 0)
         {
             loadedAllChunks = false;
@@ -90,7 +91,6 @@ public class MapGenerater : MonoBehaviour
             loadedAllChunks = true;
         }
     }
-
 
     struct MapData {
         public Action<MeshData> callback;
