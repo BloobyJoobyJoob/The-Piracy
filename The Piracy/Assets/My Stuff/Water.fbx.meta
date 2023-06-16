@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 9b52c00d84623aa42977cb049600d7e6
+guid: 10aaaaee1a5361d41844ec3c28b9b334
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable: []
@@ -32,7 +32,7 @@ ModelImporter:
     extraExposedTransformPaths: []
     extraUserProperties: []
     clipAnimations: []
-    isReadable: 1
+    isReadable: 0
   meshes:
     lODScreenPercentages: []
     globalScale: 1
@@ -40,17 +40,17 @@ ModelImporter:
     addColliders: 0
     useSRGBMaterialColor: 1
     sortHierarchyByName: 1
-    importVisibility: 0
-    importBlendShapes: 0
-    importCameras: 0
-    importLights: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
     nodeNameCollisionStrategy: 1
     fileIdsGeneration: 2
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
     keepQuads: 0
-    weldVertices: 0
+    weldVertices: 1
     bakeAxisConversion: 0
     preserveHierarchy: 0
     skinWeightsMode: 0
@@ -69,11 +69,11 @@ ModelImporter:
     useFileScale: 1
   tangentSpace:
     normalSmoothAngle: 60
-    normalImportMode: 2
-    tangentImportMode: 2
+    normalImportMode: 0
+    tangentImportMode: 3
     normalCalculationMode: 4
     legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
-    blendShapeNormalImportMode: 2
+    blendShapeNormalImportMode: 1
     normalSmoothingSource: 0
   referencedClips: []
   importAnimation: 1

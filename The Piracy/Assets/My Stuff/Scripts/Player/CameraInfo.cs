@@ -10,4 +10,7 @@ public class CameraInfo : ScriptableObject
     public float MaxViewDistance;
     public float MinViewDistance;
     public float scrollSensitivity;
+
+    public float WorldCurvePower;
+    public float WorldCurveOffset;
 }

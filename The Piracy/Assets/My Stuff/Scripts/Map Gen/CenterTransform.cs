@@ -10,11 +10,9 @@ public class CenterTransform : MonoBehaviour
     void Start(){
         InvokeRepeating("CenterOceanFunc", 1, recenterDelay);
     }
-
     void CenterOceanFunc(){
-        transform.position = new Vector3(Mathf.RoundToInt(center.position.x), 
+        transform.position = new Vector3(Mathf.RoundToInt(center.position.x * 0.5f) * 2, 
             transform.position.y,
-            Mathf.RoundToInt(center.position.z));
-
+            Mathf.RoundToInt(center.position.z * 0.5f) * 2);
     }
 }

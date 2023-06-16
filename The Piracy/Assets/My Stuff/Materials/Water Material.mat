@@ -58,7 +58,7 @@ Material:
     - _Foam_Step: 0.7
     - _Foam_Step_2: -2.5
     - _Foam_Strength: 4
-    - _Noise_Scale: 10.421
+    - _Noise_Scale: 2.222
     - _QueueControl: 0
     - _QueueOffset: 0
     - _Remap_Max: 1

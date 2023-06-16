@@ -112,6 +112,7 @@ public class PlayerController : NetworkBehaviour
         virtualCameraFollow.m_CameraDistance = scroll;
         
         virtualCamera.m_Lens.FieldOfView = info.CameraInfo.FOV;
+        LittlePlanetController.Singleton.UpdateCurve(info.CameraInfo.WorldCurveOffset, info.CameraInfo.WorldCurvePower);
         
         if (!firstSpawn)
         {

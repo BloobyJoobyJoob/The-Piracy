@@ -17,3 +17,5 @@ MonoBehaviour:
   MaxViewDistance: 80
   MinViewDistance: 40
   scrollSensitivity: 5
+  WorldCurvePower: 1.03
+  WorldCurveOffset: 5
