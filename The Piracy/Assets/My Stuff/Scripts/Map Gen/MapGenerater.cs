@@ -93,7 +93,6 @@ public class MapGenerater : MonoBehaviour
         {
             if (loadedAllChunksBefore == false)
             {
-                Debug.Break();
                 loadedAllChunksBefore = true;
                 loadedAllChunks.Invoke();
             }

@@ -50,26 +50,20 @@ public class PlayerController : NetworkBehaviour
         }
     }
     private void Start() {
-        UpdateShipInfo(Ships[0], true);
-
-        transform.position = new Vector3(transform.position.x, ShipInfo.WaterHeight, transform.position.z);
         MapGenerater.Singleton.loadedAllChunks += Spawn;
-
     }
     private void Spawn()
     {
-        if (Spawned == true)
-        {
-            return;
-        }
         Spawned = true;
-        
-        float halfSize = MapGenerater.Singleton.size / 2;
 
-        //spawn at random pos in chunk 
-        transform.position = new Vector3(UnityEngine.Random.Range(-halfSize, halfSize), transform.position.y, UnityEngine.Random.Range(-halfSize, halfSize));
+        int spawnIndex = UnityEngine.Random.Range(0, MapGenerater.Singleton.SpawnLocations.Count);
 
-        ShipController.gameObject.SetActive(true);
+        Debug.Log(MapGenerater.Singleton.SpawnLocations[spawnIndex]);
+
+        transform.position = new Vector3(MapGenerater.Singleton.SpawnLocations[spawnIndex].x, ShipInfo.WaterHeight, MapGenerater.Singleton.SpawnLocations[spawnIndex].y);
+
+        UpdateShipInfo(Ships[0], true);
+
         rb.isKinematic = false;
         playerInput.enabled = true;
         Spawned = true;
@@ -126,8 +120,8 @@ public class PlayerController : NetworkBehaviour
         catch {}
     }
 
-    public void UpdateShipInfo(int ShipInfoIndex, bool firstSpawn = false){
-        UpdateShipInfo(Ships[ShipInfoIndex], firstSpawn);
+    public void UpdateShipInfo(int ShipInfoIndex){
+        UpdateShipInfo(Ships[ShipInfoIndex]);
     }
 
     public void OnMove(InputAction.CallbackContext context){
