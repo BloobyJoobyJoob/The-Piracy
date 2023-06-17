@@ -24,7 +24,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Zoom In",
+                    "name": "Zoom",
                     "type": "Value",
                     "id": "31357872-2ef2-4d83-93d7-99728eb4af69",
                     "expectedControlType": "Axis",
@@ -288,15 +288,37 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "",
-                    "id": "fa5f8aef-be39-43e1-a329-9567460bdd21",
-                    "path": "",
+                    "name": "1D Axis",
+                    "id": "0cd4a2c4-c16f-46ff-9e27-b7731da47ac7",
+                    "path": "1DAxis",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Zoom In",
-                    "isComposite": false,
+                    "action": "Zoom",
+                    "isComposite": true,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "d0d5caf0-6e46-4dad-a475-67e91b66233f",
+                    "path": "<Mouse>/scroll/up",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Zoom",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "68e02161-7f9b-4f29-98ce-3cf97e16b3c3",
+                    "path": "<Mouse>/scroll/down",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Zoom",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 }
             ]
         },

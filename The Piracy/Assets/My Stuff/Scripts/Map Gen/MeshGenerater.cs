@@ -5,7 +5,7 @@ using System;
 
 public static class MeshGenerater
 {
-    public static MeshData GenerateTerrainMesh(float[,] heightMap, int seed, TerrainType[] regions, float colorVariation, float heightMultiplier, AnimationCurve _heightCurve, int collisionVertSkipInterval, float minCollisionHeight)
+    public static MeshData GenerateTerrainMesh(float[,] heightMap, int seed, TerrainType[] regions, float colorVariation, float heightMultiplier, AnimationCurve _heightCurve, int collisionVertSkipInterval, float minCollisionHeight, float minSpawnHeight)
     {
         System.Random random = new System.Random(seed);
 
@@ -56,10 +56,17 @@ public static class MeshGenerater
 
                 meshData.colVerts[vert] = new Vector3(mapX - halfSize, evaluatedHeight, mapY - halfSize);
                 
-                if (x < colSize && y < colSize && evaluatedHeight > minCollisionHeight)
+                if (x < colSize && y < colSize)
                 {
-                    meshData.AddColTriangle(vert + colSize + 1, vert + colSize + 2, vert);
-                    meshData.AddColTriangle(vert + 1, vert, vert + colSize + 2);
+                    if (evaluatedHeight > minCollisionHeight)
+                    {
+                        meshData.AddColliderTri(vert + colSize + 1, vert + colSize + 2, vert);
+                        meshData.AddColliderTri(vert + 1, vert, vert + colSize + 2);
+                    }
+                    else if (evaluatedHeight <= minSpawnHeight)
+                    {
+                        meshData.AddSpawnLocation(new Vector2(mapX - halfSize, mapY - halfSize));
+                    }
                 }
                 vert++;
             }
@@ -69,7 +76,9 @@ public static class MeshGenerater
         
         void AddColoredTri(int a, int b, int c)
         {
-            Color color = PickColor((meshData.vertices[a].y + meshData.vertices[b].y + meshData.vertices[c].y) / 3 / heightMultiplier);
+            float averageHeight = (meshData.vertices[a].y + meshData.vertices[b].y + meshData.vertices[c].y) / 3 / heightMultiplier;
+
+            Color color = PickColor(averageHeight);
             meshData.colors[a] = color;
             meshData.colors[b] = color;
             meshData.colors[c] = color;
@@ -113,10 +122,14 @@ public class MeshData
     public Vector3[] colVerts;
     public int[] colTris;
 
+    public List<Vector2> spawnLocations;
+
     int triangleIndex;
     int colTriIndex;
     public MeshData(int size, int collisionVertSkipInterval)
     {
+        spawnLocations = new List<Vector2>();
+
         vertices = new Vector3[size * size * 6];
         colors = new Color[size * size * 6];
         triangles = new int[(size - 1) * (size - 1) * 6];
@@ -128,7 +141,7 @@ public class MeshData
         colTris = new int[length * length * 6];
     }
 
-    public void AddColTriangle(int a, int b, int c)
+    public void AddColliderTri(int a, int b, int c)
     {
         colTris[colTriIndex] = a;
         colTris[colTriIndex + 1] = b;
@@ -136,6 +149,9 @@ public class MeshData
         colTriIndex += 3;
     }
 
+    public void AddSpawnLocation(Vector2 position){
+        spawnLocations.Add(position);
+    }
     public void AddTriangle(int a, int b, int c)
     {
         triangles[triangleIndex] = a;

@@ -34,9 +34,14 @@ public class MapGenerater : MonoBehaviour
     public int vertSkipInterval = 4;
     public float minHeight = 20;
 
+    [Header("Spawning")]
+    public float maxSpawnHeight = 0;
+
     Queue<MapData> meshQueue = new Queue<MapData>();
 
-    public bool loadedAllChunks {get; private set;} = false; 
+    public bool loadedAllChunksBefore {get; private set;} = false;
+    public Action loadedAllChunks;
+    public List<Vector2> SpawnLocations {get; private set;} = new List<Vector2>();
 
     public static MapGenerater Singleton;
 
@@ -65,9 +70,8 @@ public class MapGenerater : MonoBehaviour
 
         new Thread(threadStart).Start();
     }
-
     private void GeneratingMesh(Vector2 center, Action<MeshData> callback) {
-        MeshData meshData = MeshGenerater.GenerateTerrainMesh(GenerateMap(size + 1, seed, scale, octaves, persistance, lacunarity, center + offset), seed, regions, colorVariation, meshHeightMultiplier, meshHeightCurve, vertSkipInterval, minHeight);
+        MeshData meshData = MeshGenerater.GenerateTerrainMesh(GenerateMap(size + 1, seed, scale, octaves, persistance, lacunarity, center + offset), seed, regions, colorVariation, meshHeightMultiplier, meshHeightCurve, vertSkipInterval, minHeight, maxSpawnHeight);
             
         lock (meshQueue)
         {
@@ -79,7 +83,6 @@ public class MapGenerater : MonoBehaviour
 
         if (meshQueue.Count > 0)
         {
-            loadedAllChunks = false;
             for (var i = 0; i < meshQueue.Count; i++)
             {
                 MapData mapData = meshQueue.Dequeue();
@@ -88,7 +91,12 @@ public class MapGenerater : MonoBehaviour
         }
         else
         {
-            loadedAllChunks = true;
+            if (loadedAllChunksBefore == false)
+            {
+                Debug.Break();
+                loadedAllChunksBefore = true;
+                loadedAllChunks.Invoke();
+            }
         }
     }
 

@@ -16,6 +16,6 @@ MonoBehaviour:
   FollowOffset: {x: 0, y: 5, z: 0}
   MaxViewDistance: 80
   MinViewDistance: 40
-  scrollSensitivity: 5
-  WorldCurvePower: 1.03
+  scrollSensitivity: 0.05
+  WorldCurvePower: 1
   WorldCurveOffset: 5

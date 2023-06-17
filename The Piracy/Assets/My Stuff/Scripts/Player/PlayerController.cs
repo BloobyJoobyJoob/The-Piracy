@@ -53,19 +53,17 @@ public class PlayerController : NetworkBehaviour
         UpdateShipInfo(Ships[0], true);
 
         transform.position = new Vector3(transform.position.x, ShipInfo.WaterHeight, transform.position.z);
-    }
+        MapGenerater.Singleton.loadedAllChunks += Spawn;
 
-
-    private void Update()
-    {
-        if (MapGenerater.Singleton.loadedAllChunks && !Spawned)
-        {
-            Spawned = true;
-            Spawn();
-        }
     }
     private void Spawn()
     {
+        if (Spawned == true)
+        {
+            return;
+        }
+        Spawned = true;
+        
         float halfSize = MapGenerater.Singleton.size / 2;
 
         //spawn at random pos in chunk 
@@ -148,7 +146,7 @@ public class PlayerController : NetworkBehaviour
     public void OnScroll(InputAction.CallbackContext context){
         if (IsOwner && IsSpawned)
         {
-            scroll = Mathf.Clamp(scroll + (float)context.ReadValue<int>() * ShipInfo.CameraInfo.scrollSensitivity, 
+            scroll = Mathf.Clamp(scroll + (float)context.ReadValue<float>() * ShipInfo.CameraInfo.scrollSensitivity, 
                 ShipInfo.CameraInfo.MinViewDistance, 
                 ShipInfo.CameraInfo.MaxViewDistance);
             virtualCameraFollow.m_CameraDistance = scroll;

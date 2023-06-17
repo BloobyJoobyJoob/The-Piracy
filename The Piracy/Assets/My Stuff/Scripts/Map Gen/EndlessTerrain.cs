@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.VFX;
+using System.Linq;
 
 [System.Serializable]
 public class SharedFoliageData {
@@ -120,6 +121,11 @@ public class EndlessTerrain : MonoBehaviour {
 		void OnMeshGenerated(MeshData meshData) {
 			meshFilter.mesh = meshData.CreateMesh();
 			meshCollider.sharedMesh = meshData.CreateColliderMesh();
+
+			foreach (Vector2 spawnLocation in meshData.spawnLocations)
+			{
+				MapGenerater.Singleton.SpawnLocations.Add(new Vector2(spawnLocation.x + position.x, spawnLocation.y + position.y));
+			}
 
 			for (var i = 0; i < foliagePrefabs.Length; i++)
 			{
