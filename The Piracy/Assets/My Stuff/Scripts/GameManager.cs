@@ -47,15 +47,15 @@ public class GameManager : MonoBehaviour
     //Runs Server side
     private void SpawnPlayer(ulong id){
 
+        Debug.Log("Player Spawned!");
         NetworkObject player = Instantiate(PlayerPrefab).GetComponent<NetworkObject>();
         player.SpawnWithOwnership(id);
     }
-
     void OnClientConnected(ulong id){
         
         if (NetworkManager.Singleton.IsServer)
         {
             SpawnPlayer(id);
-        }
+        } 
     }
 }

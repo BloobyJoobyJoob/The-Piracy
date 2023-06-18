@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.Threading;
+using Unity.Netcode;
 
 [System.Serializable]
 public class TerrainType {
@@ -91,7 +92,7 @@ public class MapGenerater : MonoBehaviour
         }
         else
         {
-            if (loadedAllChunksBefore == false)
+            if (loadedAllChunksBefore == false && GameManager.Singleton.PlayerControllers[NetworkManager.Singleton.LocalClientId] != null)
             {
                 loadedAllChunksBefore = true;
                 loadedAllChunks.Invoke();

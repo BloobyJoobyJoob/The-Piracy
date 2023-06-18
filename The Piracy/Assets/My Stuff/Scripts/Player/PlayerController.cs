@@ -50,26 +50,69 @@ public class PlayerController : NetworkBehaviour
         }
     }
     private void Start() {
-        MapGenerater.Singleton.loadedAllChunks += Spawn;
+        if (IsOwner)
+        {
+            MapGenerater.Singleton.loadedAllChunks += Spawn;
+        }
     }
+
+    // Run on when the local player respawns 
     private void Spawn()
     {
-        Spawned = true;
-
         int spawnIndex = UnityEngine.Random.Range(0, MapGenerater.Singleton.SpawnLocations.Count);
-
-        Debug.Log(MapGenerater.Singleton.SpawnLocations[spawnIndex]);
 
         transform.position = new Vector3(MapGenerater.Singleton.SpawnLocations[spawnIndex].x, 0, MapGenerater.Singleton.SpawnLocations[spawnIndex].y);
 
-        UpdateShipInfo(Ships[0], true);
+        UpdateShipInfoServerRPC(0);
+        UpdateShipInfo(0);
+
         transform.position = new Vector3(transform.position.x, ShipInfo.WaterHeight, transform.position.z);
 
         rb.isKinematic = false;
         playerInput.enabled = true;
+
         Spawned = true;
     }
+    [ServerRpc]
+    private void UpdateShipInfoServerRPC(int index, ServerRpcParams serverRpcParams = default){
+        UpdateShipInfoClientRPC(index, serverRpcParams.Receive.SenderClientId);
+    }
 
+    [ClientRpc]
+    private void UpdateShipInfoClientRPC(int index, ulong sender)
+    {
+        Debug.Log(sender);
+        Debug.Log(OwnerClientId);
+        if (NetworkManager.LocalClientId != sender) UpdateShipInfo(index);
+    }
+    void UpdateShipInfo(int index){
+
+        ShipInfo = Ships[index];
+        rb.mass = Ships[index].Mass;
+        rb.drag = Ships[index].Drag;
+        rb.angularDrag = Ships[index].AngularDrag;
+        rb.centerOfMass = Ships[index].CenterOfMass;
+
+        scroll = Ships[index].CameraInfo.MaxViewDistance;
+        virtualCameraFollow.m_CameraDistance = scroll;
+
+        virtualCamera.m_Lens.FieldOfView = Ships[index].CameraInfo.FOV;
+        LittlePlanetController.Singleton.UpdateCurve(Ships[index].CameraInfo.WorldCurveOffset, Ships[index].CameraInfo.WorldCurvePower);
+
+        if (ShipController != null)
+        {
+            Destroy(ShipController.gameObject);
+        }
+
+        Debug.Log("Spawning Ship! " + OwnerClientId);
+        ShipController = Instantiate(Ships[index].Ship.gameObject, transform).GetComponent<ShipController>();
+
+        try
+        {
+            shipInfoChanged.Invoke(ShipInfo);
+        }
+        catch { }
+    }
     private void FixedUpdate() {
 
         if (IsOwner && IsSpawned && Spawned)
@@ -94,35 +137,8 @@ public class PlayerController : NetworkBehaviour
             }
         }
     } 
-    public void UpdateShipInfo(ShipInfo info, bool firstSpawn = false){
-        ShipInfo = info;
-        rb.mass = info.Mass;
-        rb.drag = info.Drag;
-        rb.angularDrag = info.AngularDrag;
-        rb.centerOfMass = info.CenterOfMass;
-        
-        scroll = info.CameraInfo.MaxViewDistance;
-        virtualCameraFollow.m_CameraDistance = scroll;
-        
-        virtualCamera.m_Lens.FieldOfView = info.CameraInfo.FOV;
-        LittlePlanetController.Singleton.UpdateCurve(info.CameraInfo.WorldCurveOffset, info.CameraInfo.WorldCurvePower);
-        
-        if (!firstSpawn)
-        {
-            Destroy(ShipController.gameObject);
-        }
-
-        ShipController = Instantiate(info.Ship.gameObject, transform).GetComponent<ShipController>();
-
-        try
-        {
-           shipInfoChanged.Invoke(ShipInfo); 
-        }
-        catch {}
-    }
-
-    public void UpdateShipInfo(int ShipInfoIndex){
-        UpdateShipInfo(Ships[ShipInfoIndex]);
+    public void UpgradeShip(int ShipInfoIndex){
+        UpdateShipInfoServerRPC(ShipInfoIndex);
     }
 
     public void OnMove(InputAction.CallbackContext context){
