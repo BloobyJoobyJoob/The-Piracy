@@ -60,9 +60,10 @@ public class PlayerController : NetworkBehaviour
 
         Debug.Log(MapGenerater.Singleton.SpawnLocations[spawnIndex]);
 
-        transform.position = new Vector3(MapGenerater.Singleton.SpawnLocations[spawnIndex].x, ShipInfo.WaterHeight, MapGenerater.Singleton.SpawnLocations[spawnIndex].y);
+        transform.position = new Vector3(MapGenerater.Singleton.SpawnLocations[spawnIndex].x, 0, MapGenerater.Singleton.SpawnLocations[spawnIndex].y);
 
         UpdateShipInfo(Ships[0], true);
+        transform.position = new Vector3(transform.position.x, ShipInfo.WaterHeight, transform.position.z);
 
         rb.isKinematic = false;
         playerInput.enabled = true;
@@ -108,7 +109,7 @@ public class PlayerController : NetworkBehaviour
         
         if (!firstSpawn)
         {
-            Destroy(ShipController.gameObject);  
+            Destroy(ShipController.gameObject);
         }
 
         ShipController = Instantiate(info.Ship.gameObject, transform).GetComponent<ShipController>();
