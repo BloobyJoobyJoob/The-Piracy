@@ -8,7 +8,6 @@ using System;
 
 public class PlayerController : NetworkBehaviour
 {
-    public Action<ShipInfo> shipInfoChanged;
     public ShipInfo ShipInfo { get; private set; }
     Rigidbody rb;
     CinemachineVirtualCamera virtualCamera;
@@ -24,6 +23,8 @@ public class PlayerController : NetworkBehaviour
 
     public bool Spawned { get; private set; } = false;
 
+    private NetworkVariable<int> shipIndex = new NetworkVariable<int>(value: -1, readPerm: NetworkVariableReadPermission.Everyone, writePerm: NetworkVariableWritePermission.Owner);
+    private int localShipIndex = -1;
     private void Awake() {
         rb = GetComponent<Rigidbody>();
         playerInput = GetComponent<PlayerInput>();
@@ -50,9 +51,16 @@ public class PlayerController : NetworkBehaviour
         }
     }
     private void Start() {
+
+        shipIndex.OnValueChanged += ShipInfoChanged;
+
         if (IsOwner)
         {
             MapGenerater.Singleton.loadedAllChunks += Spawn;
+        }
+        else
+        {
+            ShipInfoChanged(-1, shipIndex.Value);
         }
     }
 
@@ -63,7 +71,6 @@ public class PlayerController : NetworkBehaviour
 
         transform.position = new Vector3(MapGenerater.Singleton.SpawnLocations[spawnIndex].x, 0, MapGenerater.Singleton.SpawnLocations[spawnIndex].y);
 
-        UpdateShipInfoServerRPC(0);
         UpdateShipInfo(0);
 
         transform.position = new Vector3(transform.position.x, ShipInfo.WaterHeight, transform.position.z);
@@ -73,45 +80,39 @@ public class PlayerController : NetworkBehaviour
 
         Spawned = true;
     }
-    [ServerRpc]
-    private void UpdateShipInfoServerRPC(int index, ServerRpcParams serverRpcParams = default){
-        UpdateShipInfoClientRPC(index, serverRpcParams.Receive.SenderClientId);
+    // Public method for updating the ship
+    public void UpdateShipInfo(int index){
+        shipIndex.Value = index;
     }
 
-    [ClientRpc]
-    private void UpdateShipInfoClientRPC(int index, ulong sender)
-    {
-        Debug.Log(sender);
-        Debug.Log(OwnerClientId);
-        if (NetworkManager.LocalClientId != sender) UpdateShipInfo(index);
-    }
-    void UpdateShipInfo(int index){
-
-        ShipInfo = Ships[index];
-        rb.mass = Ships[index].Mass;
-        rb.drag = Ships[index].Drag;
-        rb.angularDrag = Ships[index].AngularDrag;
-        rb.centerOfMass = Ships[index].CenterOfMass;
-
-        scroll = Ships[index].CameraInfo.MaxViewDistance;
-        virtualCameraFollow.m_CameraDistance = scroll;
-
-        virtualCamera.m_Lens.FieldOfView = Ships[index].CameraInfo.FOV;
-        LittlePlanetController.Singleton.UpdateCurve(Ships[index].CameraInfo.WorldCurveOffset, Ships[index].CameraInfo.WorldCurvePower);
-
-        if (ShipController != null)
+    // Run on every client over the network for this ship
+    private void ShipInfoChanged(int previous, int current){
+        if (current != localShipIndex)
         {
-            Destroy(ShipController.gameObject);
-        }
+            localShipIndex = current;
+            if (IsOwner)
+            {
+                ShipInfo = Ships[current];
+                rb.mass = Ships[current].Mass;
+                rb.drag = Ships[current].Drag;
+                rb.angularDrag = Ships[current].AngularDrag;
+                rb.centerOfMass = Ships[current].CenterOfMass;
 
-        Debug.Log("Spawning Ship! " + OwnerClientId);
-        ShipController = Instantiate(Ships[index].Ship.gameObject, transform).GetComponent<ShipController>();
+                scroll = Ships[current].CameraInfo.MaxViewDistance;
+                virtualCameraFollow.m_CameraDistance = scroll;
 
-        try
-        {
-            shipInfoChanged.Invoke(ShipInfo);
+                virtualCamera.m_Lens.FieldOfView = Ships[current].CameraInfo.FOV;
+                LittlePlanetController.Singleton.UpdateCurve(Ships[current].CameraInfo.WorldCurveOffset, Ships[current].CameraInfo.WorldCurvePower);
+            }
+
+            if (ShipController != null)
+            {
+                Destroy(ShipController.gameObject);
+            }
+
+            Debug.Log("Spawning Ship! " + OwnerClientId);
+            ShipController = Instantiate(Ships[current].Ship.gameObject, transform).GetComponent<ShipController>();
         }
-        catch { }
     }
     private void FixedUpdate() {
 
@@ -137,10 +138,6 @@ public class PlayerController : NetworkBehaviour
             }
         }
     } 
-    public void UpgradeShip(int ShipInfoIndex){
-        UpdateShipInfoServerRPC(ShipInfoIndex);
-    }
-
     public void OnMove(InputAction.CallbackContext context){
         if (IsOwner && IsSpawned)
         {
