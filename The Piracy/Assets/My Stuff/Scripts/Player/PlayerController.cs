@@ -109,8 +109,6 @@ public class PlayerController : NetworkBehaviour
             {
                 Destroy(ShipController.gameObject);
             }
-
-            Debug.Log("Spawning Ship! " + OwnerClientId);
             ShipController = Instantiate(Ships[current].Ship.gameObject, transform).GetComponent<ShipController>();
         }
     }

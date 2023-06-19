@@ -53,6 +53,8 @@ public class MapGenerater : MonoBehaviour
         this.scale = scale;
         this.lacunarity = lacunarity;
         this.offset = offset;
+
+        Debug.Log("Seed: " + seed);
     }
 
     private void Awake(){ 
