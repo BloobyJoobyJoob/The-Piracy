@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3a4e928b26478d4ebb7e0626384fdfe, type: 3}
   m_Name: DefaultCannonSettings
   m_EditorClassIdentifier: 
-  CannonFireWarmUp: 2
+  CannonFireWarmUp: 1
   CannonFireDelay: 0.5
-  CannonBallForce: 500
-  CannonBallFireAngle: 0.05
+  CannonBallForce: 20000
+  CannonBallFireAngle: 0.02
   Cannonball: {fileID: 127120, guid: 57f864ece5baabd4aaa79837c08b4ec9, type: 3}

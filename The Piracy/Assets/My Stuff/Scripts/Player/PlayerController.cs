@@ -114,15 +114,19 @@ public class PlayerController : NetworkBehaviour
     }
 
     private void Update() {
-        if (isFiring && !ShipController.shooting)
+        if (Spawned)
         {
-            ShipController.FireCannons();
+            if (isFiring && !ShipController.shooting)
+            {
+                ShipController.FireCannons();
+            }
         }
+        isFiring = false;
     }
 
     private void FixedUpdate() {
 
-        if (IsOwner && IsSpawned && Spawned)
+        if (IsOwner && Spawned)
         {
             rb.AddForce(new Vector3(transform.forward.x, 0, transform.forward.z) * ShipSettings.Force * Mathf.Clamp(movement.y, 0, 1) * Time.timeScale);
 
@@ -145,20 +149,23 @@ public class PlayerController : NetworkBehaviour
         }
     } 
     public void OnMove(InputAction.CallbackContext context){
-        if (IsOwner && IsSpawned)
+        if (IsOwner)
         {
             movement = context.ReadValue<Vector2>();
         }
     }
     public void OnFire(InputAction.CallbackContext context){
-        if (IsOwner && IsSpawned)
+        if (IsOwner)
         {
-           isFiring = context.started; 
+            if (context.started)
+            {
+                isFiring = true;
+            } 
         }
     }
 
     public void OnScroll(InputAction.CallbackContext context){
-        if (IsOwner && IsSpawned)
+        if (IsOwner)
         {
             scroll = Mathf.Clamp(scroll + (float)context.ReadValue<float>() * ShipSettings.CameraSettings.scrollSensitivity, 
                 ShipSettings.CameraSettings.MinViewDistance, 

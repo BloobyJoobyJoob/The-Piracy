@@ -58491,7 +58491,7 @@ MonoBehaviour:
   scale: 100
   vertSkipInterval: 6
   minHeight: 15
-  heightOffset: -1
+  heightOffset: 1
   maxSpawnHeight: 5
 --- !u!114 &2088564257
 MonoBehaviour:

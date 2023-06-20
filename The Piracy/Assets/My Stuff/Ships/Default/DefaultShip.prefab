@@ -539,7 +539,8 @@ MonoBehaviour:
     shipTiers: []
   GoodsStorageUpgrades:
     shipTiers: []
-  CannonBallSpawns: []
+  CannonBallSpawns:
+  - {fileID: 3753534381699254887}
   CannonSettings: {fileID: 11400000, guid: 92a409ea551b585479e6aab04022e908, type: 2}
 --- !u!1 &5346360976449808763
 GameObject:
@@ -552,7 +553,6 @@ GameObject:
   - component: {fileID: 5346360976449558277}
   - component: {fileID: 5346360976452905633}
   - component: {fileID: 5346360976451818557}
-  - component: {fileID: 5392619738123357873}
   m_Layer: 0
   m_Name: SM_Prop_Cannon_01_Separate
   m_TagString: Untagged
@@ -568,7 +568,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5346360976449808763}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.28199995, z: 1.479}
+  m_LocalPosition: {x: 0, y: 0.35, z: 1.479}
   m_LocalScale: {x: 1, y: 1, z: 0.8000001}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -626,20 +626,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &5392619738123357873
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5346360976449808763}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 43104422006284474, guid: e6722a80934dca8498e694ed1687a611, type: 2}
 --- !u!1 &5346360976449857085
 GameObject:
   m_ObjectHideFlags: 0
