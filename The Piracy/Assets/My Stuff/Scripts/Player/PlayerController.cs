@@ -8,7 +8,7 @@ using System;
 
 public class PlayerController : NetworkBehaviour
 {
-    public ShipInfo ShipInfo { get; private set; }
+    public ShipSettings ShipSettings { get; private set; }
     Rigidbody rb;
     CinemachineVirtualCamera virtualCamera;
     CinemachineFramingTransposer virtualCameraFollow;
@@ -18,7 +18,7 @@ public class PlayerController : NetworkBehaviour
     float scroll;
 
     [Tooltip("First Item is the default")]
-    public ShipInfo[] Ships;
+    public ShipSettings[] Ships;
     public ShipController ShipController { get; private set; }
 
     public bool Spawned { get; private set; } = false;
@@ -52,7 +52,7 @@ public class PlayerController : NetworkBehaviour
     }
     private void Start() {
 
-        shipIndex.OnValueChanged += ShipInfoChanged;
+        shipIndex.OnValueChanged += ShipSettingsChanged;
 
         if (IsOwner)
         {
@@ -60,7 +60,7 @@ public class PlayerController : NetworkBehaviour
         }
         else
         {
-            ShipInfoChanged(-1, shipIndex.Value);
+            ShipSettingsChanged(-1, shipIndex.Value);
         }
     }
 
@@ -71,9 +71,9 @@ public class PlayerController : NetworkBehaviour
 
         transform.position = new Vector3(MapGenerater.Singleton.SpawnLocations[spawnIndex].x, 0, MapGenerater.Singleton.SpawnLocations[spawnIndex].y);
 
-        UpdateShipInfo(0);
+        UpdateShipSettings(0);
 
-        transform.position = new Vector3(transform.position.x, ShipInfo.WaterHeight, transform.position.z);
+        transform.position = new Vector3(transform.position.x, ShipSettings.WaterHeight, transform.position.z);
 
         rb.isKinematic = false;
         playerInput.enabled = true;
@@ -81,28 +81,28 @@ public class PlayerController : NetworkBehaviour
         Spawned = true;
     }
     // Public method for updating the ship
-    public void UpdateShipInfo(int index){
+    public void UpdateShipSettings(int index){
         shipIndex.Value = index;
     }
 
     // Run on every client over the network for this ship
-    private void ShipInfoChanged(int previous, int current){
+    private void ShipSettingsChanged(int previous, int current){
         if (current != localShipIndex)
         {
             localShipIndex = current;
             if (IsOwner)
             {
-                ShipInfo = Ships[current];
+                ShipSettings = Ships[current];
                 rb.mass = Ships[current].Mass;
                 rb.drag = Ships[current].Drag;
                 rb.angularDrag = Ships[current].AngularDrag;
                 rb.centerOfMass = Ships[current].CenterOfMass;
 
-                scroll = Ships[current].CameraInfo.MaxViewDistance;
+                scroll = Ships[current].CameraSettings.MaxViewDistance;
                 virtualCameraFollow.m_CameraDistance = scroll;
 
-                virtualCamera.m_Lens.FieldOfView = Ships[current].CameraInfo.FOV;
-                LittlePlanetController.Singleton.UpdateCurve(Ships[current].CameraInfo.WorldCurveOffset, Ships[current].CameraInfo.WorldCurvePower);
+                virtualCamera.m_Lens.FieldOfView = Ships[current].CameraSettings.FOV;
+                LittlePlanetController.Singleton.UpdateCurve(Ships[current].CameraSettings.WorldCurveOffset, Ships[current].CameraSettings.WorldCurvePower);
             }
 
             if (ShipController != null)
@@ -112,15 +112,23 @@ public class PlayerController : NetworkBehaviour
             ShipController = Instantiate(Ships[current].Ship.gameObject, transform).GetComponent<ShipController>();
         }
     }
+
+    private void Update() {
+        if (isFiring && !ShipController.shooting)
+        {
+            ShipController.FireCannons();
+        }
+    }
+
     private void FixedUpdate() {
 
         if (IsOwner && IsSpawned && Spawned)
         {
-            rb.AddForce(new Vector3(transform.forward.x, 0, transform.forward.z) * ShipInfo.Force * Mathf.Clamp(movement.y, 0, 1) * Time.timeScale);
+            rb.AddForce(new Vector3(transform.forward.x, 0, transform.forward.z) * ShipSettings.Force * Mathf.Clamp(movement.y, 0, 1) * Time.timeScale);
 
-            Vector3 torque = Vector3.up * ShipInfo.Torque * movement.x * Time.timeScale * new Vector2(rb.velocity.x, rb.velocity.z).magnitude;
+            Vector3 torque = Vector3.up * ShipSettings.Torque * movement.x * Time.timeScale * new Vector2(rb.velocity.x, rb.velocity.z).magnitude;
 
-            rb.AddTorque(new Vector3(0, Mathf.Clamp(torque.y, -ShipInfo.MaxTorque, ShipInfo.MaxTorque), 0));
+            rb.AddTorque(new Vector3(0, Mathf.Clamp(torque.y, -ShipSettings.MaxTorque, ShipSettings.MaxTorque), 0));
 
             FloatShip(ShipController.floatPoints);
         }
@@ -130,9 +138,9 @@ public class PlayerController : NetworkBehaviour
         
         foreach (Transform point in floatingPoints)
         {
-            if (point.position.y < ShipInfo.WaterHeight)
+            if (point.position.y < ShipSettings.WaterHeight)
             {
-                rb.AddForceAtPosition(Vector3.up * ShipInfo.BuoyancyStrength * (ShipInfo.WaterHeight - point.position.y), point.position, ForceMode.VelocityChange);
+                rb.AddForceAtPosition(Vector3.up * ShipSettings.BuoyancyStrength * (ShipSettings.WaterHeight - point.position.y), point.position, ForceMode.VelocityChange);
             }
         }
     } 
@@ -145,16 +153,16 @@ public class PlayerController : NetworkBehaviour
     public void OnFire(InputAction.CallbackContext context){
         if (IsOwner && IsSpawned)
         {
-           isFiring = context.performed;
+           isFiring = context.started; 
         }
     }
 
     public void OnScroll(InputAction.CallbackContext context){
         if (IsOwner && IsSpawned)
         {
-            scroll = Mathf.Clamp(scroll + (float)context.ReadValue<float>() * ShipInfo.CameraInfo.scrollSensitivity, 
-                ShipInfo.CameraInfo.MinViewDistance, 
-                ShipInfo.CameraInfo.MaxViewDistance);
+            scroll = Mathf.Clamp(scroll + (float)context.ReadValue<float>() * ShipSettings.CameraSettings.scrollSensitivity, 
+                ShipSettings.CameraSettings.MinViewDistance, 
+                ShipSettings.CameraSettings.MaxViewDistance);
             virtualCameraFollow.m_CameraDistance = scroll;
         }
     }

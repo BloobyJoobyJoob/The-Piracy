@@ -5,7 +5,7 @@ using System;
 
 public static class MeshGenerater
 {
-    public static MeshData GenerateTerrainMesh(float[,] heightMap, int seed, TerrainType[] regions, float colorVariation, float heightMultiplier, AnimationCurve _heightCurve, int collisionVertSkipInterval, float minCollisionHeight, float minSpawnHeight)
+    public static MeshData GenerateTerrainMesh(float[,] heightMap, int seed, TerrainType[] regions, float colorVariation, float heightMultiplier, AnimationCurve _heightCurve, int collisionVertSkipInterval, float minCollisionHeight, float collisionHeightOffset, float minSpawnHeight)
     {
         System.Random random = new System.Random(seed);
 
@@ -54,7 +54,7 @@ public static class MeshGenerater
 
                 float evaluatedHeight = heightCurve.Evaluate(heightMap[mapX, mapY]) * heightMultiplier;
 
-                meshData.colVerts[vert] = new Vector3(mapX - halfSize, evaluatedHeight, mapY - halfSize);
+                meshData.colVerts[vert] = new Vector3(mapX - halfSize, evaluatedHeight - collisionHeightOffset, mapY - halfSize);
                 
                 if (x < colSize && y < colSize)
                 {

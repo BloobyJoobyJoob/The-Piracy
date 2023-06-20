@@ -34,6 +34,7 @@ public class MapGenerater : MonoBehaviour
     [Tooltip("Must be a factor of the size of the mesh")]
     public int vertSkipInterval = 4;
     public float minHeight = 20;
+    public float heightOffset = 1;
 
     [Header("Spawning")]
     public float maxSpawnHeight = 0;
@@ -74,7 +75,7 @@ public class MapGenerater : MonoBehaviour
         new Thread(threadStart).Start();
     }
     private void GeneratingMesh(Vector2 center, Action<MeshData> callback) {
-        MeshData meshData = MeshGenerater.GenerateTerrainMesh(GenerateMap(size + 1, seed, scale, octaves, persistance, lacunarity, center + offset), seed, regions, colorVariation, meshHeightMultiplier, meshHeightCurve, vertSkipInterval, minHeight, maxSpawnHeight);
+        MeshData meshData = MeshGenerater.GenerateTerrainMesh(GenerateMap(size + 1, seed, scale, octaves, persistance, lacunarity, center + offset), seed, regions, colorVariation, meshHeightMultiplier, meshHeightCurve, vertSkipInterval, minHeight, heightOffset, maxSpawnHeight);
             
         lock (meshQueue)
         {
