@@ -14,7 +14,7 @@ public class ShipController : MonoBehaviour
     public ShipUpgrades GoodsQuantityUpgrades;
     public ShipUpgrades GoodsStorageUpgrades;
 
-    public Transform[] CannonBallSpawns;
+    public Cannon[] Cannons;
 
     public CannonSettings CannonSettings;
 
@@ -35,9 +35,11 @@ public class ShipController : MonoBehaviour
     IEnumerator Fire(){
         shooting = true;
         yield return new WaitForSeconds(CannonSettings.CannonFireWarmUp);
-        foreach (Transform cannon in CannonBallSpawns)
+        foreach (Cannon cannon in Cannons)
         {
-            GameObject cannonBall = Instantiate(CannonSettings.Cannonball, cannon.transform.position, cannon.rotation);
+            GameObject cannonBall = Instantiate(CannonSettings.Cannonball, cannon.cannonBallSpawn.transform.position, cannon.cannonBallSpawn.transform.rotation);
+
+            cannon.particleSystem.Play();
 
             Vector3 angleVector = new Vector3(transform.forward.x, CannonSettings.CannonBallFireAngle, transform.forward.z).normalized;
 
