@@ -10,7 +10,8 @@ public class ShipController : MonoBehaviour
     public ShipUpgrades CannonSpeedUpgrades;
     public ShipUpgrades CannonRangeUpgrades;
     public ShipUpgrades CannonQuantityUpgrades;
-    public ShipUpgrades HullIntergrityUpgrades;
+    public ShipUpgrades ShipArmor;
+    public ShipUpgrades ShipHealth;
     public ShipUpgrades GoodsQuantityUpgrades;
     public ShipUpgrades GoodsStorageUpgrades;
 

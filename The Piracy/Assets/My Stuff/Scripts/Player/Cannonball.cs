@@ -15,13 +15,18 @@ public class Cannonball : MonoBehaviour
     bool underWater = false;
     private void Update() {
         ParticleSystem.EmissionModule emissionModule = ParticleSystem.emission;
-        emissionModule.rateOverTime = ParticalEmmissionRateMultiplier * Rigidbody.velocity.magnitude;
-
-        if (!underWater && transform.position.y < WaterHeight)
+        if (transform.position.y < WaterHeight)
         {
-            underWater = true;
-            emissionModule.rateOverTime = 0;
-            Destroy(gameObject, DestroyDelay);
+            if (!underWater)
+            {
+                underWater = true;
+                emissionModule.rateOverTime = 0;
+                Destroy(gameObject, DestroyDelay);
+            }
+        }
+        else
+        {
+            emissionModule.rateOverTime = ParticalEmmissionRateMultiplier * Rigidbody.velocity.magnitude;
         }
     }
     private void FixedUpdate() {

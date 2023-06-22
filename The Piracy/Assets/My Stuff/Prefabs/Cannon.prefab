@@ -5080,6 +5080,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: FX_Cannon_Smoke
       objectReference: {fileID: 0}
+    - target: {fileID: 6051721600744642229, guid: 41ebfa99c8b2ead47994595e4efc3412,
+        type: 3}
+      propertyPath: InitialModule.maxNumParticles
+      value: 120
+      objectReference: {fileID: 0}
+    - target: {fileID: 6051721600744642229, guid: 41ebfa99c8b2ead47994595e4efc3412,
+        type: 3}
+      propertyPath: EmissionModule.m_Bursts.Array.data[0].countCurve.scalar
+      value: 120
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 41ebfa99c8b2ead47994595e4efc3412, type: 3}
 --- !u!4 &441391439781823643 stripped

@@ -47,6 +47,10 @@ public class MapGenerater : MonoBehaviour
 
     public static MapGenerater Singleton;
 
+    public int minChunksToSpawn = 25;
+
+    int chunksLoadedTotal = 0;
+
     public void SetMapInformation(int seed, int octaves, float persistance, float scale, float lacunarity, Vector2 offset){
         this.seed = seed;
         this.octaves = octaves;
@@ -68,6 +72,7 @@ public class MapGenerater : MonoBehaviour
         }
     }
     public void GenorateMeshOnThread(Vector2 center, Action<MeshData> callback){
+
         ThreadStart threadStart = delegate {
             GeneratingMesh(center, callback);
         };
@@ -81,24 +86,27 @@ public class MapGenerater : MonoBehaviour
         {
             meshQueue.Enqueue(new MapData(callback, meshData));
         }
+        chunksLoadedTotal++;
     }
 
     void Update() {
-
-        if (meshQueue.Count > 0)
+        if (chunksLoadedTotal >= minChunksToSpawn)
         {
-            for (var i = 0; i < meshQueue.Count; i++)
+            if (meshQueue.Count > 0)
             {
-                MapData mapData = meshQueue.Dequeue();
-                mapData.callback(mapData.meshData);
+                for (var i = 0; i < meshQueue.Count; i++)
+                {
+                    MapData mapData = meshQueue.Dequeue();
+                    mapData.callback(mapData.meshData);
+                }
             }
-        }
-        else
-        {
-            if (loadedAllChunksBefore == false && GameManager.Singleton.PlayerControllers[NetworkManager.Singleton.LocalClientId] != null)
+            else
             {
-                loadedAllChunksBefore = true;
-                loadedAllChunks.Invoke();
+                if (loadedAllChunksBefore == false && GameManager.Singleton.PlayerControllers[NetworkManager.Singleton.LocalClientId] != null)
+                {
+                    loadedAllChunksBefore = true;
+                    loadedAllChunks.Invoke();
+                }
             }
         }
     }
