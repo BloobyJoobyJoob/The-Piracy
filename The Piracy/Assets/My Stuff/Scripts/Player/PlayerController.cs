@@ -116,12 +116,34 @@ public class PlayerController : NetworkBehaviour
     private void Update() {
         if (Spawned)
         {
-            if (isFiring && !ShipController.shooting)
+            if (IsOwner)
             {
-                ShipController.FireCannons();
+                if (isFiring && !ShipController.shooting)
+                {
+                    FireCannons();
+                    FireCannonsServerRPC();
+                }
+                isFiring = false;
             }
         }
-        isFiring = false;
+    }
+
+    [ServerRpc]
+    void FireCannonsServerRPC(){
+        FireCannonsClientRPC();
+    }
+
+    [ClientRpc]
+    void FireCannonsClientRPC()
+    {
+        if (!IsOwner)
+        {
+            FireCannons();
+        }
+    }
+
+    void FireCannons(){
+        ShipController.FireCannons();
     }
 
     private void FixedUpdate() {
