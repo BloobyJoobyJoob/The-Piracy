@@ -98,7 +98,7 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.08984923
+  m_Radius: 0.1
   m_Center: {x: 0.00000047683716, y: 0.08984922, z: 0.000000059604645}
 --- !u!54 &530996322439224482
 Rigidbody:
@@ -129,9 +129,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ParticleSystem: {fileID: 3658342624558944833}
+  MeshRenderer: {fileID: 2382796}
   Rigidbody: {fileID: 530996322439224482}
   WaterHeight: 20.5
   UnderwaterVelocityChange: 0.95
+  DestroyDelay: 3
+  BoundsScale: 10
   ParticalEmmissionRateMultiplier: 0.5
 --- !u!1 &4090088006555301978
 GameObject:

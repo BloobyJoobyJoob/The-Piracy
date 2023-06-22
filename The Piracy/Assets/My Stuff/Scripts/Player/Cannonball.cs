@@ -6,13 +6,22 @@ using DG.Tweening;
 public class Cannonball : MonoBehaviour
 {
     public ParticleSystem ParticleSystem;
+    public MeshRenderer MeshRenderer;
     public Rigidbody Rigidbody;
     public float WaterHeight;
     public float UnderwaterVelocityChange = 0.98f;
     public float DestroyDelay = 3;
+    public float BoundsScale = 10;
     public float ParticalEmmissionRateMultiplier;
 
     bool underWater = false;
+
+    private void Start()
+    {
+        Bounds b = MeshRenderer.bounds;
+        b.size *= BoundsScale;
+    }
+
     private void Update() {
         ParticleSystem.EmissionModule emissionModule = ParticleSystem.emission;
         if (transform.position.y < WaterHeight)

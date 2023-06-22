@@ -1,0 +1,2 @@
+Seed: -1554266919
+Noise Scale: 60
