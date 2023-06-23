@@ -110,6 +110,8 @@ public class PlayerController : NetworkBehaviour
                 Destroy(ShipController.gameObject);
             }
             ShipController = Instantiate(Ships[current].Ship.gameObject, transform).GetComponent<ShipController>();
+
+            ShipController.TriggerCannonRecoil += CannonRecoil;
         }
     }
 
@@ -144,6 +146,10 @@ public class PlayerController : NetworkBehaviour
 
     void FireCannons(){
         ShipController.FireCannons();
+    }
+
+    void CannonRecoil(float force, Vector3 position, float radius, float upwardsMultiplier){
+        rb.AddExplosionForce(force, position, radius, upwardsMultiplier, ForceMode.Force);
     }
 
     private void FixedUpdate() {

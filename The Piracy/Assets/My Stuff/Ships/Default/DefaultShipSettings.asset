@@ -19,8 +19,8 @@ MonoBehaviour:
   Force: 150
   Torque: 20
   MaxTorque: 50
-  CenterOfMass: {x: 0, y: -2, z: 0}
+  CenterOfMass: {x: 0, y: -0.5, z: 0}
   BaseHealth: 5
-  BuoyancyStrength: 0.2
-  WaterHeight: 22.25
+  BuoyancyStrength: 0.075
+  WaterHeight: 22.75
   CameraSettings: {fileID: 11400000, guid: f414a4c0be5afcd44a04d2d081a132be, type: 2}

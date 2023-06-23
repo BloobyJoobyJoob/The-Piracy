@@ -16,4 +16,8 @@ MonoBehaviour:
   CannonFireDelay: 0.5
   CannonBallForce: 20000
   CannonBallFireAngle: 0.02
+  CannonRecoilForce: 2500
+  CannonRecoilRadius: 10
+  CannonRecoilUpwardsMultiplier: 1
+  CannonRecoilRandomness: {x: 0, y: 0.3}
   Cannonball: {fileID: 127120, guid: 57f864ece5baabd4aaa79837c08b4ec9, type: 3}
