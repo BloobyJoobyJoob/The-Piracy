@@ -111,8 +111,19 @@ public class PlayerController : NetworkBehaviour
             }
             ShipController = Instantiate(Ships[current].Ship.gameObject, transform).GetComponent<ShipController>();
 
+            ShipController.ShipHitAction += ShipHitServerRPC;
             ShipController.TriggerCannonRecoil += CannonRecoil;
         }
+    }
+
+    [ServerRpc]
+    private void ShipHitServerRPC(){
+        ShipHitClientRPC();
+    }
+    [ClientRpc]
+    private void ShipHitClientRPC()
+    {
+        Destroy(ShipController.gameObject);
     }
 
     private void Update() {
@@ -122,7 +133,6 @@ public class PlayerController : NetworkBehaviour
             {
                 if (isFiring && !ShipController.shooting)
                 {
-                    FireCannons();
                     FireCannonsServerRPC();
                 }
                 isFiring = false;
@@ -138,13 +148,6 @@ public class PlayerController : NetworkBehaviour
     [ClientRpc]
     void FireCannonsClientRPC()
     {
-        if (!IsOwner)
-        {
-            FireCannons();
-        }
-    }
-
-    void FireCannons(){
         ShipController.FireCannons();
     }
 

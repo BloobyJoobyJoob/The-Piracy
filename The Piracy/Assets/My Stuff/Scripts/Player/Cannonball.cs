@@ -13,13 +13,18 @@ public class Cannonball : MonoBehaviour
     public float DestroyDelay = 3;
     public float BoundsScale = 10;
     public float ParticalEmmissionRateMultiplier;
-
+    public ShipController Owner;
     bool underWater = false;
 
     private void Start()
     {
         Bounds b = MeshRenderer.bounds;
         b.size *= BoundsScale;
+    }
+
+    public void Constructor(ShipController owner, Vector3 force){
+        Owner = owner;
+        Rigidbody.AddForce(force);
     }
 
     private void Update() {

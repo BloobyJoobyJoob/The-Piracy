@@ -20,6 +20,8 @@ public class ShipController : MonoBehaviour
     public bool shooting {get; private set;}
     public Action<float, Vector3, float, float> TriggerCannonRecoil;
 
+    public Action ShipHitAction;
+
     public bool FireCannons(){
         if (shooting)
         {
@@ -32,18 +34,24 @@ public class ShipController : MonoBehaviour
         }
     }
 
+    public void ShipHit(){
+        ShipHitAction();
+    }
+
     IEnumerator Fire(){
         shooting = true;
         yield return new WaitForSeconds(CannonSettings.CannonFireWarmUp);
         foreach (Cannon cannon in Cannons)
         {
-            GameObject cannonBall = Instantiate(CannonSettings.Cannonball, cannon.cannonBallSpawn.position, cannon.cannonBallSpawn.rotation);
+            GameObject cannonBallObject = Instantiate(CannonSettings.Cannonball, cannon.cannonBallSpawn.position, cannon.cannonBallSpawn.rotation);
+
+            Cannonball cannonball = cannonBallObject.GetComponent<Cannonball>();
 
             cannon.particleSystem.Play();
 
             Vector3 angleVector = new Vector3(transform.forward.x, CannonSettings.CannonBallFireAngle, transform.forward.z).normalized;
 
-            cannonBall.GetComponent<Rigidbody>().AddForce(angleVector * CannonSettings.CannonBallForce);
+            cannonball.Constructor(this, angleVector * CannonSettings.CannonBallForce);
 
             float x = cannon.cannonBallSpawn.position.x + UnityEngine.Random.Range(-CannonSettings.CannonRecoilRandomness.x, CannonSettings.CannonRecoilRandomness.x);
             float y = cannon.cannonBallSpawn.position.y + UnityEngine.Random.Range(-CannonSettings.CannonRecoilRandomness.y, CannonSettings.CannonRecoilRandomness.y);
