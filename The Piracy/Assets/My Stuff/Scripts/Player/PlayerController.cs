@@ -116,14 +116,13 @@ public class PlayerController : NetworkBehaviour
         }
     }
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     private void ShipHitServerRPC(){
         ShipHitClientRPC();
     }
     [ClientRpc]
     private void ShipHitClientRPC()
     {
-        print("Ship hit!");
         Destroy(ShipController.gameObject);
     }
 

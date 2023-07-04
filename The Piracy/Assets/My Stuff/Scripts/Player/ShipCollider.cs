@@ -7,19 +7,14 @@ public class ShipCollider : MonoBehaviour
 {
     public ShipController shipController;
 
-    public void ShipHit(){
-        shipController.ShipHit();
-    }
-
     private void OnCollisionEnter(Collision other) {
         if (NetworkManager.Singleton.IsServer)
         {
-            Cannonball cannonball;
-            if (TryGetComponent<Cannonball>(out cannonball))
+            if (other.gameObject.TryGetComponent<Cannonball>(out Cannonball cannonball))
             {
                 if (cannonball.Owner != shipController)
                 {
-                    cannonball.Owner.ShipHit();
+                    shipController.ShipHit();
                 }
             }
         }
