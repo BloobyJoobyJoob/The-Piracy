@@ -123,6 +123,7 @@ public class PlayerController : NetworkBehaviour
     [ClientRpc]
     private void ShipHitClientRPC()
     {
+        print("Ship hit!");
         Destroy(ShipController.gameObject);
     }
 
@@ -151,8 +152,11 @@ public class PlayerController : NetworkBehaviour
         ShipController.FireCannons();
     }
 
-    void CannonRecoil(float force, Vector3 position, float radius, float upwardsMultiplier){
-        rb.AddExplosionForce(force, position, radius, upwardsMultiplier, ForceMode.Force);
+    void CannonRecoil(Vector3 force){
+        if (IsOwner)
+        {
+            rb.AddForce(force, ForceMode.Force);
+        }
     }
 
     private void FixedUpdate() {

@@ -9,8 +9,5 @@ public class CannonSettings : ScriptableObject {
     public float CannonBallForce;
     public float CannonBallFireAngle;
     public float CannonRecoilForce = 5;
-    public float CannonRecoilRadius = 1;
-    public float CannonRecoilUpwardsMultiplier = 2;
-    public Vector2 CannonRecoilRandomness = new Vector2(0.03f, 0.2f);
     public GameObject Cannonball; 
 }

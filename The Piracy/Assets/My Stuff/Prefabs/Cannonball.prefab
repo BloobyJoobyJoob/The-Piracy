@@ -136,6 +136,7 @@ MonoBehaviour:
   DestroyDelay: 3
   BoundsScale: 10
   ParticalEmmissionRateMultiplier: 0.5
+  Owner: {fileID: 0}
 --- !u!1 &4090088006555301978
 GameObject:
   m_ObjectHideFlags: 0

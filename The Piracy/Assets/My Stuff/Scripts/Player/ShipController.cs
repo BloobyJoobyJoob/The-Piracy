@@ -18,7 +18,7 @@ public class ShipController : MonoBehaviour
     public Cannon[] Cannons;
     public CannonSettings CannonSettings;
     public bool shooting {get; private set;}
-    public Action<float, Vector3, float, float> TriggerCannonRecoil;
+    public Action<Vector3> TriggerCannonRecoil;
 
     public Action ShipHitAction;
 
@@ -53,11 +53,7 @@ public class ShipController : MonoBehaviour
 
             cannonball.Constructor(this, angleVector * CannonSettings.CannonBallForce);
 
-            float x = cannon.cannonBallSpawn.position.x + UnityEngine.Random.Range(-CannonSettings.CannonRecoilRandomness.x, CannonSettings.CannonRecoilRandomness.x);
-            float y = cannon.cannonBallSpawn.position.y + UnityEngine.Random.Range(-CannonSettings.CannonRecoilRandomness.y, CannonSettings.CannonRecoilRandomness.y);
-            float z = cannon.cannonBallSpawn.position.z;
-
-            TriggerCannonRecoil(CannonSettings.CannonRecoilForce, new Vector3(x, y, z), CannonSettings.CannonRecoilRadius, CannonSettings.CannonRecoilUpwardsMultiplier);
+            TriggerCannonRecoil(transform.forward * -CannonSettings.CannonRecoilForce);
 
             yield return new WaitForSeconds(CannonSettings.CannonFireDelay);
         }
