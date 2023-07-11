@@ -124,7 +124,20 @@ public class EndlessTerrain : MonoBehaviour {
 
 			foreach (Vector2 spawnLocation in meshData.spawnLocations)
 			{
-				MapGenerater.Singleton.SpawnLocations.Add(new Vector2(spawnLocation.x + position.x, spawnLocation.y + position.y));
+				float x = spawnLocation.x + position.x;
+				float y = spawnLocation.y + position.y;
+				
+				float offsetX = MapGenerater.Singleton.offset.x * MapGenerater.Singleton.size;
+				float offsetY = MapGenerater.Singleton.offset.y * MapGenerater.Singleton.size;
+
+				if (x < offsetX + GameManager.Singleton.WorldSize * 0.5f - MapGenerater.Singleton.closestDistanceToBorder && 
+					x > offsetX + -GameManager.Singleton.WorldSize * 0.5f - MapGenerater.Singleton.closestDistanceToBorder &&
+					y < offsetY + GameManager.Singleton.WorldSize * 0.5f - MapGenerater.Singleton.closestDistanceToBorder &&
+					y > offsetY + -GameManager.Singleton.WorldSize * 0.5f - MapGenerater.Singleton.closestDistanceToBorder)
+				{
+					MapGenerater.Singleton.SpawnLocations.Add(new Vector2(x, y));
+				}
+
 			}
 
 			for (var i = 0; i < foliagePrefabs.Length; i++)

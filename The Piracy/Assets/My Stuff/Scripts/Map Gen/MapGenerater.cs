@@ -19,6 +19,7 @@ public class MapGenerater : MonoBehaviour
     public AnimationCurve meshHeightCurve;
 	public int seed;
 	public int size = 10;
+
 	public Vector2 offset = Vector2.zero;
 
     public float colorVariation;
@@ -38,6 +39,7 @@ public class MapGenerater : MonoBehaviour
 
     [Header("Spawning")]
     public float maxSpawnHeight = 0;
+    public float closestDistanceToBorder = 10;
 
     Queue<MapData> meshQueue = new Queue<MapData>();
 
@@ -106,6 +108,11 @@ public class MapGenerater : MonoBehaviour
                 {
                     loadedAllChunksBefore = true;
                     loadedAllChunks.Invoke();
+                    foreach (var item in SpawnLocations)
+                    {
+                        Debug.Log(item);
+                        Debug.DrawRay(new Vector3(item.x, 0, item.y), Vector3.up * 100, Color.white, 60);
+                    }
                 }
             }
         }

@@ -32816,7 +32816,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1186391370}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 556.7726, y: 286.48206, z: 21.346924}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -58493,6 +58493,8 @@ MonoBehaviour:
   minHeight: 15
   heightOffset: 1
   maxSpawnHeight: 5
+  closestDistanceToBorder: 20
+  minChunksToSpawn: 25
 --- !u!114 &2088564257
 MonoBehaviour:
   m_ObjectHideFlags: 0
