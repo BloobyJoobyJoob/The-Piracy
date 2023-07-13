@@ -58454,6 +58454,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   seed: 0
   size: 102
+  borderOffset: 15
   offset: {x: 0, y: 0}
   colorVariation: 0.05
   regions:

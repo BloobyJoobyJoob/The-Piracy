@@ -19,9 +19,8 @@ public class MapGenerater : MonoBehaviour
     public AnimationCurve meshHeightCurve;
 	public int seed;
 	public int size = 10;
-
+    public int borderOffset = 15;
 	public Vector2 offset = Vector2.zero;
-
     public float colorVariation;
 	public TerrainType[] regions;
 
@@ -108,11 +107,6 @@ public class MapGenerater : MonoBehaviour
                 {
                     loadedAllChunksBefore = true;
                     loadedAllChunks.Invoke();
-                    foreach (var item in SpawnLocations)
-                    {
-                        Debug.Log(item);
-                        Debug.DrawRay(new Vector3(item.x, 0, item.y), Vector3.up * 100, Color.white, 60);
-                    }
                 }
             }
         }
@@ -174,6 +168,16 @@ public class MapGenerater : MonoBehaviour
 
                 amplitude *= persistance;
                 frequency *= lacunarity;
+            }
+
+            Vector2 position = new Vector2(offset.x + (x - (size * 0.5f)), offset.y + (y - (size * 0.5f)));
+
+            float distanceToEdge = (GameManager.Singleton.WorldSize * 0.5f) - Vector2.Distance(position, GameManager.Singleton.WorldCenter);
+
+            if (distanceToEdge < MapGenerater.Singleton.borderOffset)
+            {
+                // Create border
+                noiseHeight = 1;
             }
 
             if (noiseHeight > maxLocalNoiseHeight)

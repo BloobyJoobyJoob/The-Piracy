@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     public GameObject PlayerPrefab;
     public PlayerController[] PlayerControllers = new PlayerController[100];
     public float WorldSize {get; private set;}
+    public Vector2 WorldCenter {get; private set;}
     void Awake(){
         if (Singleton != null){
             Debug.LogError("poos");
@@ -45,6 +46,8 @@ public class GameManager : MonoBehaviour
         offsetY *= -MapGenerater.Singleton.size;
 
         BoxCollider boxCollider;
+
+        WorldCenter = new Vector2(-offsetX, -offsetY);
         
         boxCollider = gameObject.AddComponent<BoxCollider>();
         boxCollider.center = new Vector3(WorldSize * 0.5f - offsetX, 0, -offsetY);
