@@ -19,10 +19,17 @@ public class MapGenerater : MonoBehaviour
     public AnimationCurve meshHeightCurve;
 	public int seed;
 	public int size = 10;
-    public int borderOffset = 15;
 	public Vector2 offset = Vector2.zero;
     public float colorVariation;
 	public TerrainType[] regions;
+
+    [Header("Border")]
+    public int borderOffset = 15;
+    public float RemapFromMin;
+    public float RemapFromMax;
+    public float RemapToMin;
+    public float RemapToMax;
+    public AnimationCurve BorderHeightCurve;
 
     [Header("Noise")]
     public int octaves = 5;
@@ -172,23 +179,28 @@ public class MapGenerater : MonoBehaviour
 
             Vector2 position = new Vector2(offset.x + (x - (size * 0.5f)), offset.y + (y - (size * 0.5f)));
 
-            float distanceToEdge = (GameManager.Singleton.WorldSize * 0.5f) - Vector2.Distance(position, GameManager.Singleton.WorldCenter);
+            float distanceToEdge = Mathf.Abs((GameManager.Singleton.WorldSize * 0.5f) - Vector2.Distance(position, GameManager.Singleton.WorldCenter));
+
+            float noise = noiseHeight;
 
             if (distanceToEdge < MapGenerater.Singleton.borderOffset)
             {
-                // Create border
-                noiseHeight = 1;
+                noise = Mathf.Lerp(noiseHeight.Remap(MapGenerater.Singleton.RemapFromMin, 
+                    MapGenerater.Singleton.RemapFromMax, 
+                    MapGenerater.Singleton.RemapToMin,
+                    MapGenerater.Singleton.RemapToMax),
+                    noiseHeight, MapGenerater.Singleton.BorderHeightCurve.Evaluate(distanceToEdge / MapGenerater.Singleton.borderOffset));
             }
 
-            if (noiseHeight > maxLocalNoiseHeight)
+            if (noise > maxLocalNoiseHeight)
             {
-                maxLocalNoiseHeight = noiseHeight;
+                maxLocalNoiseHeight = noise;
             }
-            else if (noiseHeight < minLocalNoiseHeight)
+            else if (noise < minLocalNoiseHeight)
             {
-                minLocalNoiseHeight = noiseHeight;
+                minLocalNoiseHeight = noise;
             }
-            noiseMap[x, y] = noiseHeight;
+            noiseMap[x, y] = noise;
         }
     }
 

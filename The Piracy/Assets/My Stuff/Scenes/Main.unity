@@ -58405,56 +58405,28 @@ MonoBehaviour:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: -0.3708496
-      value: -0.22363894
-      inSlope: 0.46345058
-      outSlope: 0.46345058
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0.25
+      outWeight: 0
     - serializedVersion: 3
-      time: 0.80779576
-      value: 0.54935837
-      inSlope: 0.08566641
-      outSlope: -0.1392075
-      tangentMode: 1
-      weightedMode: 3
-      inWeight: 0.054734737
-      outWeight: 0.0922755
-    - serializedVersion: 3
-      time: 0.9481131
-      value: 0.6558152
-      inSlope: 1.148696
-      outSlope: 0.82835984
-      tangentMode: 1
-      weightedMode: 3
-      inWeight: 0.14420524
-      outWeight: 0.78402203
-    - serializedVersion: 3
-      time: 1.2281041
-      value: 1.0239712
-      inSlope: 0.98484945
-      outSlope: 0.8774384
-      tangentMode: 1
-      weightedMode: 3
-      inWeight: 0.47207114
-      outWeight: 0.37593704
-    - serializedVersion: 3
-      time: 1.7479773
-      value: 1.8632898
-      inSlope: 0.43284705
-      outSlope: 0.43284705
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
       tangentMode: 0
-      weightedMode: 1
-      inWeight: 0.45336092
+      weightedMode: 0
+      inWeight: 0
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
   seed: 0
   size: 102
-  borderOffset: 15
   offset: {x: 0, y: 0}
   colorVariation: 0.05
   regions:
@@ -58486,6 +58458,35 @@ MonoBehaviour:
     color: {r: 0.41799998, g: 0.41799998, b: 0.41799998, a: 1}
   - height: 1.1
     color: {r: 1, g: 1, b: 1, a: 1}
+  borderOffset: 1
+  RemapFromMin: 0
+  RemapFromMax: 1.5
+  RemapToMin: 1
+  RemapToMax: 1.25
+  BorderHeightCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   octaves: 7
   persistance: 0.5
   lacunarity: 1.9
